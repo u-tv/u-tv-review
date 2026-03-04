@@ -1,7 +1,7 @@
 name: U-TV Ultimate Sync
 on:
   schedule:
-    - cron: '30 1,3,9,12,14 * * *' # 7AM, 9AM, 3PM, 6PM, 8PM IST
+    - cron: '30 1,3,9,12,14 * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,31 +18,5 @@ jobs:
           TMDB_KEY: ${{ secrets.TMDB_API_KEY }}
           GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # 1. Get Trending Movie
-          MOVIE_DATA=$(curl -s "https://api.themoviedb.org/3/trending/movie/day?api_key=$TMDB_KEY")
-          TITLE=$(echo $MOVIE_DATA | jq -r '.results[0].title')
-          OVERVIEW=$(echo $MOVIE_DATA | jq -r '.results[0].overview')
-          POSTER=$(echo $MOVIE_DATA | jq -r '.results[0].poster_path')
-          VOTE=$(echo $MOVIE_DATA | jq -r '.results[0].vote_average')
-          
-          # 2. Get AI Human Review
-          PROMPT="Write a short movie review for '$TITLE' in Hinglish. Style: Human, Paisa Vasool. Context: $OVERVIEW"
-          AI_JSON=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$GEMINI_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"contents\": [{\"parts\": [{\"text\": \"$PROMPT\"}]}]}")
-          REVIEW=$(echo $AI_JSON | jq -r '.candidates[0].content.parts[0].text' | sed 's/"/\\"/g')
-
-          # 3. Update posts.json
-          TIMESTAMP=$(date +'%I:%M %p')
-          AUDIENCE=$(( ${VOTE%.*} * 10 ))
-          NEW_POST="{\"title\":\"$TITLE\",\"review\":\"$REVIEW\",\"critics_score\":\"$VOTE\",\"audience_score\":$AUDIENCE,\"image\":\"https://image.tmdb.org/t/p/w500$POSTER\",\"time\":\"$TIMESTAMP\",\"is_certified\":true}"
-          
-          jq ". = [$NEW_POST] + . | .[0:15]" posts.json > temp.json && mv temp.json posts.json
-
-      - name: Commit and Push
-        run: |
-          git config --global user.name "u-tv-bot"
-          git config --global user.email "bot@u-tv.com"
-          git add posts.json
-          git commit -m "Auto Update: New Human Review" || exit 0
-          git push
+          # 1. Get Trending Movie (Fixed JSON Parsing)
+          MOVIE_DATA=$(curl -s
