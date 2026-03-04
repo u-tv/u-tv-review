@@ -41,36 +41,21 @@
             transform-style: preserve-3d;
         }
 
-        /* 3D "U-" (Whtie) */
         .logo-3d-u {
             color: #fff;
-            text-shadow: 
-                -1px 1px 0 #ddd,
-                -2px 2px 0 #ccc,
-                -3px 3px 0 #bbb,
-                -4px 4px 5px rgba(0,0,0,0.5);
+            text-shadow: -1px 1px 0 #ddd, -2px 2px 0 #ccc, -3px 3px 0 #bbb, -4px 4px 5px rgba(0,0,0,0.5);
         }
 
-        /* 3D "-TV" (Orange) */
         .logo-3d-tv {
             color: var(--utv);
-            text-shadow: 
-                -1px 1px 0 #cc3f00,
-                -2px 2px 0 #992f00,
-                -3px 3px 0 #661f00,
-                -4px 4px 5px rgba(255,79,0,0.4);
+            text-shadow: -1px 1px 0 #cc3f00, -2px 2px 0 #992f00, -3px 3px 0 #661f00, -4px 4px 5px rgba(255,79,0,0.4);
         }
 
-        /* 3D "REVIEW" (White) */
         .logo-3d-review {
             color: #fff;
-            font-size: 1.5rem; /* slight smaller */
+            font-size: 1.5rem;
             margin-left: 5px;
-            text-shadow: 
-                -1px 1px 0 #ddd,
-                -2px 2px 0 #ccc,
-                -3px 3px 0 #bbb,
-                -4px 4px 5px rgba(0,0,0,0.5);
+            text-shadow: -1px 1px 0 #ddd, -2px 2px 0 #ccc, -3px 3px 0 #bbb, -4px 4px 5px rgba(0,0,0,0.5);
         }
 
         .logo-3d-box:hover .logo-3d-text {
@@ -96,14 +81,12 @@
             transform: translateY(-8px);
         }
 
-        /* 3. CERTIFIED BADGE */
         .certified-glow {
             background: linear-gradient(45deg, #f39c12, #ffcc33);
             box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
             color: #000;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--utv); border-radius: 10px; }
@@ -151,7 +134,6 @@
 <main class="pt-32 px-8 max-w-[1700px] mx-auto pb-20">
     
     <div class="grid grid-cols-12 gap-10">
-        
         <div class="col-span-12 lg:col-span-9 space-y-12">
             <section>
                 <div class="flex items-center justify-between mb-8">
@@ -217,91 +199,104 @@
     const TMDB = '174d0214bf933dd59b3d5ec68a0c967f';
     const GEMINI = 'AIzaSyBTLkHyTKZpBEnZZvgTqAm0kvvmF38kgnE';
 
+    // UPDATED: Function to fetch from posts.json (Auto-Sync)
     async function initU_TV() {
-        // Fetch Trending & Ratings
-        const trendingRes = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB}`);
-        const trending = await trendingRes.json();
-        
-        document.getElementById('trendingGrid').innerHTML = trending.results.slice(0, 10).map(m => `
-            <div class="premium-card rounded-2xl overflow-hidden relative group">
-                <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-                    ${m.vote_average > 7.5 ? '<span class="certified-glow text-[8px] font-black px-2 py-0.5 rounded-sm">3. CERTIFIED</span>' : ''}
-                    <span class="bg-blue-600/90 backdrop-blur-md text-white text-[8px] font-black px-2 py-0.5 rounded-sm">4. VERIFIED</span>
-                </div>
-                <div class="aspect-[2/3] overflow-hidden">
-                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                </div>
-                <div class="p-4 bg-gradient-to-b from-transparent to-black/90">
-                    <h4 class="text-xs font-black truncate mb-3 text-white/90 uppercase">${m.title}</h4>
-                    <div class="flex gap-3">
-                        <div class="flex-1 bg-white/5 border border-white/5 p-2 rounded-lg text-center">
-                            <div class="text-[7px] text-gray-500 font-bold uppercase mb-0.5">1. Critics</div>
-                            <div class="text-sm font-black text-orange-500">${m.vote_average.toFixed(1)}</div>
+        try {
+            // 1. Fetch Auto-Synced Data
+            const resPosts = await fetch('posts.json');
+            const autoPosts = await resPosts.json();
+            
+            // 2. Fetch Trending for Trailers and Sidebar (Real-time)
+            const trendingRes = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB}`);
+            const trending = await trendingRes.json();
+
+            // Display Auto-Synced "Human-Feel" Posts
+            if(autoPosts && autoPosts.length > 0) {
+                document.getElementById('trendingGrid').innerHTML = autoPosts.map(m => `
+                    <div class="premium-card rounded-2xl overflow-hidden relative group">
+                        <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+                            ${m.is_certified ? '<span class="certified-glow text-[8px] font-black px-2 py-0.5 rounded-sm">3. CERTIFIED</span>' : ''}
+                            <span class="bg-blue-600/90 backdrop-blur-md text-white text-[8px] font-black px-2 py-0.5 rounded-sm">4. VERIFIED</span>
                         </div>
-                        <div class="flex-1 bg-white/5 border border-white/5 p-2 rounded-lg text-center">
-                            <div class="text-[7px] text-gray-500 font-bold uppercase mb-0.5">2. Audience</div>
-                            <div class="text-sm font-black text-green-500">${Math.floor(m.vote_average * 10)}%</div>
+                        <div class="aspect-[2/3] overflow-hidden">
+                            <img src="${m.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="p-4 bg-gradient-to-b from-transparent to-black/90">
+                            <h4 class="text-xs font-black truncate mb-1 text-white/90 uppercase">${m.title}</h4>
+                            <p class="text-[10px] text-gray-400 mb-3 line-clamp-2">${m.review}</p>
+                            <div class="flex gap-3">
+                                <div class="flex-1 bg-white/5 border border-white/5 p-2 rounded-lg text-center">
+                                    <div class="text-[7px] text-gray-500 font-bold uppercase mb-0.5">1. Critics</div>
+                                    <div class="text-sm font-black text-orange-500">${m.critics_score}</div>
+                                </div>
+                                <div class="flex-1 bg-white/5 border border-white/5 p-2 rounded-lg text-center">
+                                    <div class="text-[7px] text-gray-500 font-bold uppercase mb-0.5">2. Audience</div>
+                                    <div class="text-sm font-black text-green-500">${m.audience_score}%</div>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-[8px] text-gray-600 text-right italic">${m.time}</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        `).join('');
+                `).join('');
+            }
 
-        // 13. Trailers & 12. Media
-        document.getElementById('trailerScroll').innerHTML = trending.results.slice(0, 6).map(m => `
-            <div class="min-w-[340px] aspect-video premium-card rounded-2xl relative overflow-hidden group cursor-pointer">
-                <img src="https://image.tmdb.org/t/p/w780${m.backdrop_path}" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition duration-500">
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-125 transition">
-                        <i class="fas fa-play text-white text-xs"></i>
+            // 13. Trailers & 12. Media (Still Real-time)
+            document.getElementById('trailerScroll').innerHTML = trending.results.slice(0, 6).map(m => `
+                <div class="min-w-[340px] aspect-video premium-card rounded-2xl relative overflow-hidden group cursor-pointer">
+                    <img src="https://image.tmdb.org/t/p/w780${m.backdrop_path}" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition duration-500">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-125 transition">
+                            <i class="fas fa-play text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-5">
+                        <p class="text-[10px] font-black uppercase text-white tracking-widest shadow-lg">${m.title}</p>
                     </div>
                 </div>
-                <div class="absolute bottom-4 left-5">
-                    <p class="text-[10px] font-black uppercase text-white tracking-widest shadow-lg">${m.title}</p>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
 
-        // 5. Box Office
-        const boxData = ["Avatar 3 - $2.4B", "Pushpa 2 - ₹1340Cr", "Mufasa - $780M", "Superman 2025 - $910M"];
-        document.getElementById('boxOfficeList').innerHTML = boxData.map((txt, i) => `
-            <div class="flex items-center justify-between group">
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-black text-white/20">0${i+1}</span>
-                    <span class="text-[11px] font-bold text-gray-300 group-hover:text-orange-500 transition">${txt}</span>
+            // 5. Box Office (Live Mock Data)
+            const boxData = ["Avatar 3 - $2.4B", "Pushpa 2 - ₹1340Cr", "Mufasa - $780M", "Superman 2025 - $910M"];
+            document.getElementById('boxOfficeList').innerHTML = boxData.map((txt, i) => `
+                <div class="flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-black text-white/20">0${i+1}</span>
+                        <span class="text-[11px] font-bold text-gray-300 group-hover:text-orange-500 transition">${txt}</span>
+                    </div>
+                    <i class="fas fa-caret-up text-green-500 text-xs"></i>
                 </div>
-                <i class="fas fa-caret-up text-green-500 text-xs"></i>
-            </div>
-        `).join('');
+            `).join('');
 
-        // 16. Actors
-        const actors = await fetch(`https://api.themoviedb.org/3/person/popular?api_key=${TMDB}`).then(r => r.json());
-        document.getElementById('actorList').innerHTML = actors.results.slice(0, 8).map(a => `
-            <div class="flex flex-col items-center group cursor-pointer">
-                <div class="w-full aspect-square rounded-xl overflow-hidden border border-white/10 group-hover:border-orange-500 transition">
-                    <img src="https://image.tmdb.org/t/p/w185${a.profile_path}" class="w-full h-full object-cover">
+            // 16. Actors
+            const actors = await fetch(`https://api.themoviedb.org/3/person/popular?api_key=${TMDB}`).then(r => r.json());
+            document.getElementById('actorList').innerHTML = actors.results.slice(0, 8).map(a => `
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div class="w-full aspect-square rounded-xl overflow-hidden border border-white/10 group-hover:border-orange-500 transition">
+                        <img src="https://image.tmdb.org/t/p/w185${a.profile_path}" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[7px] font-black text-gray-500 uppercase mt-2 group-hover:text-white transition">${a.name.split(' ')[0]}</span>
                 </div>
-                <span class="text-[7px] font-black text-gray-500 uppercase mt-2 group-hover:text-white transition">${a.name.split(' ')[0]}</span>
-            </div>
-        `).join('');
+            `).join('');
+
+        } catch (e) {
+            console.error("U-TV Sync Error: ", e);
+        }
     }
 
-    // 9. AI Recommendation Engine Logic
     async function getAIResponse(msg) {
         const chat = document.getElementById('aiChat');
         chat.innerHTML += `<div class="bg-white/5 p-3 rounded-2xl rounded-tr-none ml-10 text-right font-semibold text-orange-400">Bhai, ${msg}?</div>`;
-        
         try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI}`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({contents: [{parts: [{text: "You are U-TV Review AI. Be helpful, professional and use a mix of Hindi and English. Recommend movies for: " + msg}]}]})
+                body: JSON.stringify({contents: [{parts: [{text: "You are U-TV Review AI. Be helpful, professional and use Hinglish. Recommend for: " + msg}]}]})
             });
             const data = await res.json();
             const reply = data.candidates[0].content.parts[0].text;
             chat.innerHTML += `<div class="bg-orange-600/10 border border-orange-500/20 p-3 rounded-2xl rounded-tl-none mr-10 leading-relaxed">${reply}</div>`;
         } catch (e) {
-            chat.innerHTML += `<div class="text-red-500">Server busy, try again!</div>`;
+            chat.innerHTML += `<div class="text-red-500">AI Busy!</div>`;
         }
         chat.scrollTop = chat.scrollHeight;
     }
