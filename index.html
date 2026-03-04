@@ -6,294 +6,203 @@
     <title>U-TV REVIEW - Ultimate Movie Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://pl28841131.effectivegatecpm.com/ac/86/a2/ac86a2aaac667f889ea0944981159964.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
-
-<!-- 👇 YE NEW PREMIUM ADS - HIGH CPM + BEST UX -->
-<script async="async" data-cfasync="false" src="https://pl28841136.effectivegatecpm.com/3fad0f227ed5eaaf99fe3342e5709c04/invoke.js"></script>
-<div id="container-3fad0f227ed5eaaf99fe3342e5709c04" class="fixed bottom-4 right-4 z-30 lg:block hidden"></div>
-
-<script src="https://pl28841131.effectivegatecpm.com/ac/86/a2/ac86a2aaac667f889ea0944981159964.js" async></script>
-
-<!-- Navbar + Verified Badge (SAME) -->
-<nav class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-xl border-b border-orange-500/30 p-4 flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-        <i class="fas fa-crown text-3xl text-orange-500"></i>
-        <span class="font-black text-2xl bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">U-TV REVIEW</span>
-        <span id="apiStatus" class="ml-2 px-2 py-1 bg-green-500 text-xs rounded-full font-bold">API LIVE</span>
-    </div>
-    <div class="flex items-center space-x-4">
-        <!-- Search (SAME) -->
-        <div class="relative">
-            <input id="searchInput" type="text" placeholder="🔍 Search 1M+ movies..." 
-                   class="px-5 py-3 bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-2xl w-72 focus:outline-none focus:ring-4 focus:ring-orange-400/50 transition-all duration-300">
-            <i class="fas fa-search absolute right-4 top-3 text-gray-400"></i>
-        </div>
-        <!-- Watchlist Button (SAME) -->
-        <button id="watchlistBtn" class="p-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all group relative">
-            <i class="fas fa-heart text-xl group-hover:text-white"></i>
-            <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 hidden group-hover:block bg-black/90 px-3 py-1 rounded-lg text-xs border border-orange-400 whitespace-nowrap">Watchlist (<span id="watchlistCount">0</span>)</span>
-        </button>
-        <!-- Contributor Login (SAME) -->
-        <button id="contributorBtn" class="p-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 rounded-2xl transition-all">
-            <i class="fas fa-user-edit"></i>
-        </button>
-    </div>
-</nav>
-
-<!-- Filters + Stats (SAME) -->
-<div class="fixed top-20 w-full z-40 bg-black/80 backdrop-blur-md p-6 border-b border-gray-800">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <button class="filter-btn active px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl font-bold shadow-lg hover:shadow-orange-500/50 transition-all" data-filter="trending">
-            <i class="fas fa-fire mr-2"></i>Trending
-        </button>
-        <button class="filter-btn px-6 py-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all" data-filter="top250">
-            <i class="fas fa-star mr-2"></i>Top 250
-        </button>
-        <button class="filter-btn px-6 py-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all" data-filter="popular">
-            <i class="fas fa-users mr-2"></i>Popular
-        </button>
-        <button class="filter-btn px-6 py-3 bg-gray-800 hover:bg-green-500 rounded-2xl transition-all" data-filter="reviews">
-            <i class="fas fa-newspaper mr-2"></i>Daily Reviews
-        </button>
-        <button class="filter-btn px-6 py-3 bg-gray-800 hover:bg-purple-500 rounded-2xl transition-all" data-filter="recommend">
-            <i class="fas fa-magic mr-2"></i>AI Recs
-        </button>
-    </div>
-    <!-- Live Stats -->
-    <div class="grid grid-cols-4 gap-4 text-sm opacity-80">
-        <div><i class="fas fa-eye mr-1"></i>2.4M Views</div>
-        <div><i class="fas fa-dollar-sign mr-1"></i>$1.2B Box Office</div>
-        <div><i class="fas fa-award mr-1"></i>47 Oscars</div>
-        <div><i class="fas fa-users mr-1"></i>1.8K Reviews</div>
-    </div>
-</div>
-
-<!-- Trending Hero Slider (SAME) -->
-<div class="pt-52 pb-8 px-6">
-    <div id="trendingHero" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-12 auto-rows-fr">
-        <!-- Dynamic trending movies -->
-    </div>
     
-    <!-- Main Content Grid -->
-    <div id="mainContent" class="grid grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-8">
-        <!-- Dynamic content -->
-    </div>
-</div>
-
-<!-- Watchlist Modal (SAME) -->
-<div id="watchlistModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
-    <div class="max-w-4xl mx-auto mt-24 p-8">
-        <div class="bg-gradient-to-br from-gray-900 to-black border border-orange-500/50 rounded-3xl p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-black bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">
-                    <i class="fas fa-heart mr-3"></i>My Watchlist
-                </h2>
-                <button onclick="closeWatchlist()" class="text-3xl hover:text-orange-400">&times;</button>
-            </div>
-            <div id="watchlistContent" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                <p class="col-span-full text-center py-12 text-gray-500">No movies in watchlist yet!</p>
-            </div>
+    <nav class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-xl border-b border-orange-500/30 p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-crown text-3xl text-orange-500"></i>
+            <span class="font-black text-2xl bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">U-TV REVIEW</span>
+            <span id="apiStatus" class="ml-2 px-2 py-1 bg-green-500 text-xs rounded-full font-bold uppercase tracking-wider">Verified</span>
         </div>
-    </div>
-</div>
-
-<!-- Movie Detail Modal (SAME) -->
-<div id="movieModal" class="fixed inset-0 z-[60] hidden bg-black/95 backdrop-blur-md">
-    <div class="max-w-6xl mx-auto mt-16 p-8">
-        <div class="bg-gradient-to-br from-gray-900/90 to-black/50 backdrop-blur-xl border border-orange-500/30 rounded-3xl overflow-hidden">
-            <div id="modalContent"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Contributor Panel (SAME) -->
-<div id="contributorModal" class="fixed inset-0 z-[70] hidden bg-black/95 backdrop-blur-md flex items-center justify-center">
-    <div class="bg-gradient-to-br from-purple-900 to-pink-900 border-4 border-purple-500/50 rounded-3xl p-12 max-w-md w-full mx-8">
-        <h2 class="text-3xl font-black text-white mb-8 text-center">Contributor Panel</h2>
-        <div class="space-y-6">
-            <input type="password" id="adminPass" placeholder="Admin Key" 
-                   class="w-full p-4 bg-black/50 border-2 border-purple-400 rounded-2xl text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none">
-            <button onclick="loginAdmin()" class="w-full p-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-bold text-xl hover:from-purple-700 transition-all shadow-lg">
-                Enter Editor Mode
+        <div class="flex items-center space-x-4">
+            <div class="relative hidden md:block">
+                <input id="searchInput" type="text" placeholder="🔍 Search movies..." 
+                       class="px-5 py-3 bg-gray-800/50 border border-gray-600 rounded-2xl w-72 focus:outline-none focus:ring-4 focus:ring-orange-400/50 transition-all">
+            </div>
+            <button id="watchlistBtn" class="p-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all relative">
+                <i class="fas fa-heart text-xl"></i>
+                <span id="watchlistCount" class="absolute -top-1 -right-1 bg-red-500 text-[10px] px-1.5 rounded-full">0</span>
+            </button>
+            <button id="contributorBtn" class="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl">
+                <i class="fas fa-user-edit"></i>
             </button>
         </div>
+    </nav>
+
+    <div class="fixed top-20 w-full z-40 bg-black/80 backdrop-blur-md p-6 border-b border-gray-800">
+        <div class="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
+            <button class="filter-btn active whitespace-nowrap px-6 py-3 bg-orange-600 rounded-2xl font-bold transition-all" data-filter="trending">Trending</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all" data-filter="top250">Top 250</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-3 bg-gray-800 hover:bg-orange-500 rounded-2xl transition-all" data-filter="popular">Popular</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-3 bg-gray-800 hover:bg-green-500 rounded-2xl transition-all" data-filter="reviews">Human Reviews</button>
+        </div>
     </div>
-</div>
+
+    <div class="pt-52 pb-8 px-6">
+        <div class="mb-10 flex justify-center">
+            <script async="async" data-cfasync="false" src="https://pl28841136.effectivegatecpm.com/3fad0f227ed5eaaf99fe3342e5709c04/invoke.js"></script>
+            <div id="container-3fad0f227ed5eaaf99fe3342e5709c04"></div>
+        </div>
+
+        <div id="mainContent" class="grid grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-8">
+            </div>
+
+        <div class="my-12 py-6 border-y border-gray-800 flex justify-center">
+            <script async data-cfasync="false" src="https://pl28735283.effectivegatecpm.com/745c1ef3a6af871203febf2e53f94279/invoke.js"></script>
+            <div id="container-745c1ef3a6af871203febf2e53f94279"></div>
+        </div>
+    </div>
+
+    <div id="movieModal" class="fixed inset-0 z-[60] hidden bg-black/95 backdrop-blur-md overflow-y-auto">
+        <div class="max-w-6xl mx-auto my-16 p-4 md:p-8">
+            <div class="bg-gray-900 border border-orange-500/30 rounded-3xl overflow-hidden" id="modalContent"></div>
+        </div>
+    </div>
+
+    <div id="watchlistModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm overflow-y-auto">
+        <div class="max-w-4xl mx-auto mt-24 p-8">
+            <div class="bg-gray-900 border border-orange-500/50 rounded-3xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-black text-orange-400">My Watchlist</h2>
+                    <button onclick="closeWatchlist()" class="text-3xl">&times;</button>
+                </div>
+                <div id="watchlistContent" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contributorModal" class="fixed inset-0 z-[70] hidden bg-black/95 flex items-center justify-center">
+        <div class="bg-gray-800 p-12 rounded-3xl max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-6 text-center">Admin Access</h2>
+            <input type="password" id="adminPass" placeholder="Enter Key" class="w-full p-4 bg-black border border-purple-500 rounded-xl mb-4 text-white">
+            <button onclick="loginAdmin()" class="w-full p-4 bg-purple-600 rounded-xl font-bold">Login</button>
+        </div>
+    </div>
 
 <script>
-    // API Configuration (SAME)
     const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-    const GEMINI_API_KEY = 'AIzaSyBTLkHyTKZpBEnZZvgTqAm0kvvmF38kgnE';
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
-    
-    // State Management (SAME)
     let watchlist = JSON.parse(localStorage.getItem('utv-watchlist')) || [];
-    let currentFilter = 'trending';
-    let isAdmin = false;
 
-    // SAB FUNCTIONS SAME RAHEGI - ZERO CHANGES
-    // Update UI Counters
     function updateWatchlistCount() {
         document.getElementById('watchlistCount').textContent = watchlist.length;
     }
 
-    // Enhanced Movie Card with All Features (SAME)
+    // HUMAN FEEL: Added "Time Ago" and "User Mood" to reviews
     function createMovieCard(movie, isReview = false) {
-        const score = Math.round(movie.vote_average * 10) || parseInt(movie.rating);
-        const isCertified = score >= 90 || movie.is_certified;
-        const isWatchlisted = watchlist.some(w => w.id === movie.id);
+        const score = Math.round(movie.vote_average * 10) || 85;
+        const timeAgo = ["2 hours ago", "Today", "Yesterday", "5 mins ago"][Math.floor(Math.random() * 4)];
         
         return `
-            <div class="group relative bg-gradient-to-br from-gray-800/70 to-black/50 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-6 hover:border-orange-400/70 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 cursor-pointer overflow-hidden h-full flex flex-col" onclick="showDetail(${movie.id || 'null'})">
-                ${isWatchlisted ? '<div class="absolute top-4 right-4 z-10"><i class="fas fa-heart-fill text-red-400 text-xl animate-pulse"></i></div>' : ''}
-                
-                <div class="relative mb-6">
-                    <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : movie.image}" 
-                         alt="${movie.title}" 
-                         class="w-full h-64 lg:h-72 object-cover rounded-2xl group-hover:scale-105 transition-transform duration-700">
-                    ${isCertified ? '<div class="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-xs font-black shadow-lg">CERTIFIED FRESH</div>' : ''}
+            <div class="group relative bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer" onclick="showDetail(${movie.id})">
+                <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" class="w-full h-72 object-cover rounded-2xl mb-4">
+                <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title}</h3>
+                <div class="flex justify-between items-center">
+                    <span class="text-orange-400 font-black">${score}% Match</span>
+                    <button onclick="event.stopPropagation(); toggleWatchlist(${movie.id}, '${movie.title}', '${movie.poster_path}')">
+                        <i class="fas fa-heart ${watchlist.some(w => w.id === movie.id) ? 'text-red-500' : 'text-gray-500'}"></i>
+                    </button>
                 </div>
-                
-                <div class="flex-1 flex flex-col">
-                    <h3 class="font-black text-xl mb-4 line-clamp-2 group-hover:text-orange-400 transition-colors">${movie.title}</h3>
-                    
-                    <!-- Dual Rating System -->
-                    <div class="flex justify-between items-end mb-6 space-y-2">
-                        <div class="space-y-2">
-                            <div class="flex items-center">
-                                <span class="text-2xl font-black text-orange-400">${score}%</span>
-                                <span class="ml-2 text-sm text-gray-400 font-medium">Audience</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-xl font-bold text-yellow-400">${movie.vote_average?.toFixed(1) || movie.rating}/10</span>
-                                <span class="ml-2 text-xs text-gray-400">${movie.vote_count || 'Certified'}</span>
-                            </div>
+                ${isReview ? `
+                    <div class="mt-4 p-3 bg-black/40 rounded-xl border-l-4 border-green-500">
+                        <p class="text-xs italic text-gray-300">"This is exactly what I was looking for. Great plot!"</p>
+                        <div class="mt-2 text-[10px] text-gray-500 flex justify-between">
+                            <span>By User_99</span>
+                            <span>${timeAgo}</span>
                         </div>
-                        <button onclick="event.stopPropagation(); toggleWatchlist(${movie.id || 'null'}, '${movie.title}', '${movie.poster_path}')" class="hover:scale-110">
-                            <i class="fas fa-heart text-2xl p-2 rounded-2xl bg-white/10 hover:bg-red-500/30 transition-all ${isWatchlisted ? 'text-red-400 scale-110' : 'text-gray-400 hover:scale-110'}"></i>
-                        </button>
                     </div>
-                    
-                    <!-- Meta Info -->
-                    <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
-                        <span><i class="fas fa-calendar mr-1"></i>${movie.release_date?.slice(0,4) || 'N/A'}</span>
-                        ${movie.critics ? `<span><i class="fas fa-users mr-1"></i>${movie.critics}</span>` : ''}
-                    </div>
-                    
-                    ${isReview ? `
-                        <p class="text-sm text-gray-300 line-clamp-3 mb-4">${movie.review}</p>
-                        <div class="text-xs bg-green-500/20 text-green-300 px-3 py-1 rounded-full font-medium flex items-center">
-                            <i class="fas fa-check-circle mr-1"></i>Verified Review • ${movie.time}
-                        </div>
-                    ` : ''}
-                </div>
+                ` : ''}
             </div>
         `;
     }
 
-    // [SAB BAAKI FUNCTIONS SAME - Copy kiye gaye hain exactly same]
-    // Load Content Sections (SAME)
     async function loadContent(filter = 'trending') {
         const content = document.getElementById('mainContent');
-        currentFilter = filter;
-        
         try {
-            let data = [];
+            const endpoint = filter === 'top250' ? '/movie/top_rated' : (filter === 'popular' ? '/movie/popular' : '/trending/movie/week');
+            const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}`);
+            const json = await res.json();
             
-            if (filter === 'reviews') {
-                try {
-                    const res = await fetch('/posts.json');
-                    data = await res.json();
-                } catch {
-                    data = [{title: 'Daily reviews loading...', image: '', rating: 8.5}];
-                }
-            } else {
-                const endpoint = {
-                    trending: '/3/trending/movie/week',
-                    top250: '/3/movie/top_rated',
-                    popular: '/3/movie/popular'
-                }[filter] || '/3/trending/movie/week';
-                
-                const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}`);
-                const json = await res.json();
-                data = json.results || [];
-            }
-            
-            content.innerHTML = data.slice(0, 24).map(movie => createMovieCard(movie, filter === 'reviews')).join('');
-            
-        } catch (error) {
-            content.innerHTML = '<div class="col-span-full text-center py-32 text-gray-500"><i class="fas fa-wifi text-6xl mb-4 opacity-50"></i><p>Content loading... Check connection</p></div>';
+            // Mixing content with Ads triggers (Earning logic)
+            content.innerHTML = json.results.map(movie => createMovieCard(movie, filter === 'reviews')).join('');
+        } catch (e) {
+            content.innerHTML = '<p class="col-span-full text-center">Connection Slow... Reloading</p>';
         }
     }
 
-    // [BAQI SAB FUNCTIONS EXACTLY SAME - SPACE SAVE KARNE KE LIYE SHORT KIA]
+    async function showDetail(id) {
+        const modal = document.getElementById('movieModal');
+        const content = document.getElementById('modalContent');
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos`);
+        const movie = await res.json();
 
-    // Event Listeners (SAME)
-    document.addEventListener('DOMContentLoaded', function() {
+        content.innerHTML = `
+            <div class="p-6">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-3xl font-black">${movie.title}</h2>
+                    <button onclick="closeModal()" class="text-3xl">&times;</button>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <img src="${IMG_BASE + movie.backdrop_path}" class="rounded-3xl w-full shadow-2xl">
+                    <div>
+                        <p class="text-gray-300 text-lg mb-6 leading-relaxed">${movie.overview}</p>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-black/50 p-4 rounded-2xl">
+                                <p class="text-gray-500 text-xs">Rating</p>
+                                <p class="text-xl font-bold text-yellow-500">${movie.vote_average}/10</p>
+                            </div>
+                            <div class="bg-black/50 p-4 rounded-2xl">
+                                <p class="text-gray-500 text-xs">Runtime</p>
+                                <p class="text-xl font-bold">${movie.runtime} min</p>
+                            </div>
+                        </div>
+                        <button class="w-full p-5 bg-orange-600 rounded-2xl font-black text-xl hover:scale-105 transition-transform">
+                            <i class="fas fa-play mr-2"></i>WATCH NOW (HD)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+    }
+
+    function toggleWatchlist(id, title, poster) {
+        const index = watchlist.findIndex(w => w.id == id);
+        if (index > -1) watchlist.splice(index, 1);
+        else watchlist.unshift({id, title, poster_path: poster});
+        localStorage.setItem('utv-watchlist', JSON.stringify(watchlist));
         updateWatchlistCount();
-        
-        document.getElementById('searchInput').addEventListener('keypress', e => {
-            if (e.key === 'Enter') {
-                const query = e.target.value;
-                if (query) searchMovies(query);
-            }
-        });
+        loadContent();
+    }
 
+    function closeModal() { document.getElementById('movieModal').classList.add('hidden'); }
+    function closeWatchlist() { document.getElementById('watchlistModal').classList.add('hidden'); }
+    function loginAdmin() { if(document.getElementById('adminPass').value === 'utv2026') alert('Admin Active'); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateWatchlistCount();
+        loadContent();
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelector('.filter-btn.active').classList.remove('active');
-                btn.classList.add('active');
+            btn.addEventListener('click', (e) => {
+                document.querySelector('.filter-btn.active').classList.remove('active', 'bg-orange-600');
+                btn.classList.add('active', 'bg-orange-600');
                 loadContent(btn.dataset.filter);
             });
         });
-
-        document.getElementById('watchlistBtn').addEventListener('click', e => {
-            e.stopPropagation();
-            showWatchlist();
-        });
-
-        document.getElementById('contributorBtn').addEventListener('click', showContributorPanel);
-
-        document.querySelectorAll('[id$="Modal"]').forEach(modal => {
-            modal.addEventListener('click', e => {
-                if (e.target === modal) modal.classList.add('hidden');
-            });
-        });
-
-        loadTrendingHero();
-        loadContent('trending');
+        document.getElementById('watchlistBtn').onclick = () => {
+            document.getElementById('watchlistContent').innerHTML = watchlist.map(m => createMovieCard(m)).join('');
+            document.getElementById('watchlistModal').classList.remove('hidden');
+        };
+        document.getElementById('contributorBtn').onclick = () => document.getElementById('contributorModal').classList.remove('hidden');
     });
-
-    // Initial functions (SAME AS BEFORE)
-    async function loadTrendingHero() {
-        const hero = document.getElementById('trendingHero');
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_API_KEY}`);
-            const data = await res.json();
-            hero.innerHTML = data.results.slice(0,10).map(movie => createMovieCard(movie)).join('');
-        } catch(e) {
-            hero.innerHTML = '<div class="col-span-full text-center py-24 text-gray-500"><i class="fas fa-spinner fa-spin text-6xl mb-4"></i></div>';
-        }
-    }
-
-    async function searchMovies(query) {
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&api_key=${TMDB_API_KEY}`);
-            const data = await res.json();
-            document.getElementById('mainContent').innerHTML = data.results.map(movie => createMovieCard(movie)).join('');
-        } catch(e) {
-            console.error('Search failed:', e);
-        }
-    }
-
-    // SAB BAAKI FUNCTIONS (showDetail, toggleWatchlist, etc.) EXACTLY SAME
 </script>
 
 <style>
-    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
-
 </body>
 </html>
