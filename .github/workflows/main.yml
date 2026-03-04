@@ -1,0 +1,40 @@
+name: U-TV REVIEW Auto Sync
+
+on:
+  schedule:
+    # 7AM, 9AM, 3PM, 6PM, 8PM (UTC timings)
+    - cron: '30 1 * * *'  # 7:00 AM IST
+    - cron: '30 3 * * *'  # 9:00 AM IST
+    - cron: '30 9 * * *'  # 3:00 PM IST
+    - cron: '30 12 * * *' # 6:00 PM IST
+    - cron: '30 14 * * *' # 8:00 PM IST
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run Human-Sync Script
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python sync_reviews.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "U-TV-Bot"
+          git config --global user.email "bot@u-tv.com"
+          git add posts.json
+          git commit -m "Auto-sync: New Human Review Added"
+          git push
