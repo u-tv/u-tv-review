@@ -3,20 +3,28 @@ on:
   schedule:
     - cron: '30 1,3,9,12,14 * * *'
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Fetch and Process Data
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch Data
         env:
           TMDB_KEY: ${{ secrets.TMDB_API_KEY }}
-          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # 1. Get Trending Movie (Fixed JSON Parsing)
-          MOVIE_DATA=$(curl -s
+          DATA=$(curl -s "https://api.themoviedb.org/3/trending/movie/week?api_key=$TMDB_KEY")
+          TITLE=$(echo $DATA | jq -r '.results[0].title')
+          IMAGE="https://image.tmdb.org/t/p/w500$(echo $DATA | jq -r '.results[0].poster_path')"
+          SCORE=$(echo $DATA | jq -r '.results[0].vote_average | floor')
+          TIME=$(date '+%I:%M %p')
+          
+          cat > posts.json << EOF
+          [{"title":"$TITLE","review":"Trending movie review","critics_score":"$SCORE","audience_score":"95","image":"$IMAGE","time":"$TIME","is_certified":true}]
+          EOF
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Sync data"
