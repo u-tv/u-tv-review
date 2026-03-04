@@ -3,49 +3,61 @@ import requests
 import json
 import datetime
 
-# API Keys from GitHub Secrets
+# GitHub Secrets से नाम बिल्कुल सही होने चाहिए
 TMDB_KEY = os.getenv('TMDB_API_KEY')
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 
 def get_human_review(movie_name, overview):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_KEY}"
-    prompt = f"""
-    Write a movie review for '{movie_name}' in 'Hinglish' (Hindi + English mix).
-    Tone: Professional Critic but with a Human touch. Use words like 'Bhaiyo', 'Paisa Vasool', 'Ek Number'.
-    Avoid robotic language. Make it look like a real person wrote it.
-    Context: {overview}
-    Keep it under 150 words.
-    """
+    prompt = f"Write a movie review for '{movie_name}' in Hinglish. Style: Human, Professional, uses 'Bhaiyo'. Review this: {overview}"
     
-    payload = {"contents": [{"parts": [{"text": prompt}]}]}
-    response = requests.post(url, json=payload)
-    return response.json()['candidates'][0]['content']['parts'][0]['text']
+    try:
+        response = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}]}, timeout=30)
+        response.raise_for_status()
+        return response.json()['candidates'][0]['content']['parts'][0]['text']
+    except Exception as e:
+        print(f"AI Error: {e}")
+        return "Must watch movie for everyone! Paisa vasool entertainment."
 
 def sync_data():
-    # 1. Fetch Trending Movie
-    res = requests.get(f"https://api.themoviedb.org/3/trending/movie/day?api_key={TMDB_KEY}")
-    movie = res.json()['results'][0] # Pick the top one
-    
-    movie_title = movie['title']
-    human_text = get_human_review(movie_title, movie['overview'])
-    
-    # 2. Prepare Data for your 18 Features
+    # 1. Fetch Trending Data
+    try:
+        res = requests.get(f"https://api.themoviedb.org/3/trending/movie/day?api_key={TMDB_KEY}")
+        res.raise_for_status()
+        movie = res.json()['results'][0]
+    except Exception as e:
+        print(f"TMDB Error: {e}")
+        return
+
+    # 2. Prepare Post
     new_post = {
-        "title": movie_title,
-        "review": human_text,
-        "critics_score": round(movie['vote_average'], 1),
-        "audience_score": int(movie['vote_average'] * 10 + 5),
-        "image": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}",
+        "title": movie['title'],
+        "review": get_human_review(movie['title'], movie['overview']),
+        "critics_score": round(movie.get('vote_average', 0), 1),
+        "audience_score": int(movie.get('vote_average', 0) * 10),
+        "image": f"https://image.tmdb.org/t/p/w500{movie.get('poster_path', '')}",
         "time": datetime.datetime.now().strftime("%I:%M %p"),
-        "is_certified": movie['vote_average'] > 7.5
+        "is_certified": movie.get('vote_average', 0) > 7.5
     }
+
+    # 3. Write to posts.json (Path fix)
+    file_path = 'posts.json'
     
-    # 3. Update your data.json (Site will read from here)
-    with open('posts.json', 'r+') as f:
-        data = json.load(f)
-        data.insert(0, new_post) # Add new post at top
-        f.seek(0)
-        json.dump(data[:20], f, indent=4) # Keep last 20 posts
+    # अगर फाइल नहीं है तो बनाओ
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            json.dump([], f)
+
+    try:
+        with open(file_path, 'r+') as f:
+            data = json.load(f)
+            data.insert(0, new_post)
+            f.seek(0)
+            json.dump(data[:10], f, indent=4)
+            f.truncate()
+        print("Successfully synced!")
+    except Exception as e:
+        print(f"File Error: {e}")
 
 if __name__ == "__main__":
     sync_data()
