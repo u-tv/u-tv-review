@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Movie Reviews - U-TV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .poster-hover { transition: transform 0.3s ease; }
+        .poster-hover:hover { transform: scale(1.05); }
+        .loading { animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
+    
+    <!-- Header with Search -->
+    <header class="bg-black/80 backdrop-blur-md sticky top-0 z-50 p-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 items-center">
+            <h1 class="text-2xl font-bold text-yellow-400">U-TV Enhanced Reviews</h1>
+            <div class="flex-1 max-w-md">
+                <input type="text" id="searchInput" placeholder="Movie name search karein..." 
+                       class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
+            <div id="loadingSpinner" class="hidden animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-400"></div>
+        </div>
+    </header>
+
+    <!-- Language Selector Modal -->
+    <div id="langModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto border border-yellow-400">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-yellow-400">भाषा चुनें</h3>
+                <button id="closeLangModal" class="text-2xl hover:text-yellow-400">&times;</button>
+            </div>
+            <div id="languageList" class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                <!-- Languages dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-6">
+        <!-- Auto Loading Movies Grid -->
+        <section id="moviesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mb-12">
+            <!-- Movies auto load honge yahan -->
+        </section>
+
+        <!-- Search Results -->
+        <section id="searchResults" class="hidden mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-400">Search Results</h2>
+            <div id="searchGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- Movie Detail Modal -->
+        <div id="movieModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+            <div class="bg-gray-900 rounded-3xl p-8 max-w-4xl w-full max-h-[95vh] overflow-y-auto border-4 border-yellow-400 shadow-2xl">
+                <div class="flex justify-between items-start mb-8">
+                    <button id="closeModal" class="text-3xl hover:text-yellow-400">&times;</button>
+                </div>
+                
+                <div id="movieDetailContent" class="text-center">
+                    <!-- Movie details yahan load honge -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // API Configuration (existing IMDB API)
+        const API_CONFIG = {
+            imdbApiKey: 'k_12345678', // Aapka existing API key
+            tmdbApiKey: 'eyJhbGciOiJIUzI1NiJ9...', // TMDB key if needed
+            baseUrl: 'https://api.themoviedb.org/3/',
+            imdbBase: 'https://imdb-api.com/API/'
+        };
+
+        let allMovies = [];
+        let languages = ['हिंदी', 'English', 'తెలుగు', 'தமிழ்', 'मराठी', 'বাংলা', 'मल्याळം', 'पंजाबी', 'ગુજરાતી'];
+        let currentMovie = null;
+        let currentLanguage = 'हिंदी';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+
+        async function init() {
+            await loadMovies();
+            setupEventListeners();
+            autoLoadMore();
+        }
+
+        // Load movies from existing data + new enhanced data
+        async function loadMovies() {
+            try {
+                // Existing data load (backward compatibility)
+                const existingData = await fetch('/data/reviews.json').then(r => r.json()).catch(() => ([]));
+                
+                // New enhanced data
+                const enhancedData = await fetch('/data/enhanced-movies.json').then(r => r.json()).catch(() => ([]));
+                
+                allMovies = [...existingData, ...enhancedData];
+                renderMovies(allMovies.slice(0, 20));
+            } catch (error) {
+                console.error('Data load error:', error);
+                // Fallback: Generate sample data
+                generateFallbackMovies();
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', debounce(searchMovies, 300));
+
+        function searchMovies(e) {
+            const query = e.target.value.toLowerCase();
+            const results = allMovies.filter(movie => 
+                movie.title.toLowerCase().includes(query) || 
+                movie.original_title.toLowerCase().includes(query)
+            );
+            
+            if (query.length > 2) {
+                document.getElementById('moviesGrid').classList.add('hidden');
+                document.getElementById('searchResults').classList.remove('hidden');
+                renderMovies(results, 'searchGrid');
+            } else {
+                document.getElementById('moviesGrid').classList.remove('hidden');
+                document.getElementById('searchResults').classList.add('hidden');
+            }
+        }
+
+        // Auto unlimited loading
+        let loadTrigger = 0;
+        window.addEventListener('scroll', debounce(() => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+                loadTrigger++;
+                if (loadTrigger % 5 === 0) autoLoadMore();
+            }
+        }, 200));
+
+        async function autoLoadMore() {
+            const currentCount = document.querySelectorAll('[data-movie-id]').length;
+            if (currentCount >= allMovies.length) return;
+            
+            const moreMovies = allMovies.slice(currentCount, currentCount + 10);
+            renderMovies(moreMovies, 'moviesGrid', true);
+        }
+
+        // Render movies grid
+        function renderMovies(movies, containerId = 'moviesGrid', append = false) {
+            const container = document.getElementById(containerId);
+            if (!append) container.innerHTML = '';
+            
+            movies.forEach(movie => {
+                const poster = movie.poster_path ? 
+                    `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 
+                    'https://via.placeholder.com/300x450/333/fff?text=No+Poster';
+                
+                const div = document.createElement('div');
+                div.className = 'group poster-hover bg-gray-800 rounded-2xl p-4 hover:bg-gray-700 cursor-pointer overflow-hidden shadow-2xl';
+                div.dataset.movieId = movie.id;
+                div.innerHTML = `
+                    <div class="relative mb-4">
+                        <img src="${poster}" alt="${movie.title}" 
+                             class="w-full h-64 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded-full text-sm font-bold">
+                            ⭐ ${movie.vote_average?.toFixed(1) || 'N/A'}
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 line-clamp-2">${movie.title}</h3>
+                    <p class="text-sm text-gray-400 mb-1">⏱️ ${movie.runtime || 'N/A'} mins</p>
+                    <p class="text-sm text-gray-400 mb-1">⭐ ${movie.stars || 'N/A'}</p>
+                    <p class="text-sm text-gray-400">📅 ${movie.release_date || 'N/A'}</p>
+                `;
+                div.addEventListener('click', () => openMovieModal(movie.id));
+                container.appendChild(div);
+            });
+        }
+
+        // Movie detail modal with language selector
+        async function openMovieModal(movieId) {
+            currentMovie = allMovies.find(m => m.id == movieId);
+            if (!currentMovie) {
+                currentMovie = await fetchEnhancedMovieData(movieId);
+            }
+            showLanguageModal();
+        }
+
+        function showLanguageModal() {
+            const modal = document.getElementById('langModal');
+            const langList = document.getElementById('languageList');
+            langList.innerHTML = '';
+            
+            languages.forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = `p-4 rounded-xl text-left hover:bg-yellow-500/20 border border-gray-600 hover:border-yellow-400 transition-all w-full text-sm font-medium ${currentLanguage === lang ? 'bg-yellow-500/30 border-yellow-400' : ''}`;
+                btn.textContent = lang;
+                btn.onclick = () => selectLanguage(lang);
+                langList.appendChild(btn);
+            });
+            
+            modal.classList.remove('hidden');
+        }
+
+        async function selectLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('langModal').classList.add('hidden');
+            await showMovieDetails();
+        }
+
+        async function showMovieDetails() {
+            const modal = document.getElementById('movieModal');
+            const content = document.getElementById('movieDetailContent');
+            
+            // Show loading
+            content.innerHTML = '<div class="flex justify-center py-12"><div class="loading h-12 w-12 border-4 border-yellow-400 border-t-transparent rounded-full"></div></div>';
+            modal.classList.remove('hidden');
+            
+            // Translate story to selected language
+            const translatedStory = await translateStory(currentMovie.overview, currentLanguage);
+            
+            content.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <img src="https://image.tmdb.org/t/p/w500${currentMovie.poster_path}" 
+                             alt="${currentMovie.title}" class="w-full max-w-md mx-auto rounded-2xl shadow-2xl">
+                        <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+                            <div class="bg-gray-800 p-3 rounded-xl">
+                                <span class="text-gray-400">Release Date</span><br>
+                                <strong class="text-2xl text-yellow-400">${currentMovie.release_date || 'N/A'}</strong>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl">
+                                <span class="text-gray-400">Runtime</span><br>
+                                <strong class="text-2xl">${currentMovie.runtime || 'N/A'} mins</strong>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl">
+                                <span class="text-gray-400">Rating</span><br>
+                                <strong class="text-2xl text-yellow-400">⭐ ${currentMovie.vote_average?.toFixed(1) || 'N/A'}</strong>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl">
+                                <span class="text-gray-400">Platform</span><br>
+                                <strong class="text-2xl">${currentMovie.platform || 'Theatres/OTT'}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                            ${currentMovie.title}
+                        </h2>
+                        <div class="mb-6 p-4 bg-gray-800 rounded-xl">
+                            <h3 class="text-xl font-bold mb-3 text-yellow-400">📖 Full Story (${currentLanguage})</h3>
+                            <p class="text-lg leading-relaxed whitespace-pre-wrap">${translatedStory}</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-gray-800 p-4 rounded-xl">
+                                <h4 class="font-bold mb-2 text-yellow-400">⭐ Top Stars</h4>
+                                <p>${currentMovie.stars || 'Cast details loading...'}</p>
+                            </div>
+                            <div class="bg-gray-800 p-4 rounded-xl">
+                                <h4 class="font-bold mb-2 text-yellow-400">🎭 Genres</h4>
+                                <p>${currentMovie.genres?.join(', ') || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Translate story (mock AI translation)
+        async function translateStory(story, language) {
+            // Real implementation would use translation API
+            const translations = {
+                'हिंदी': story,
+                'English': story,
+                'తెలుగు': 'సినిమా కథ తెలుగులో...',
+                'தமிழ்': 'திரைப்பட கதை தமிழில்...',
+                'मराठी': 'चित्रपट कथा मराठीत...',
+                // Add more translations
+            };
+            return translations[language] || story;
+        }
+
+        // Enhanced movie data fetch
+        async function fetchEnhancedMovieData(id) {
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}movie/${id}?api_key=${API_CONFIG.tmdbApiKey}&language=hi-IN&append_to_response=credits,release_dates`);
+                return await response.json();
+            } catch (error) {
+                console.error('Enhanced data fetch failed:', error);
+                return null;
+            }
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            document.getElementById('closeLangModal').onclick = () => document.getElementById('langModal').classList.add('hidden');
+            document.getElementById('closeModal').onclick = () => document.getElementById('movieModal').classList.add('hidden');
+            
+            document.getElementById('langModal').onclick = (e) => {
+                if (e.target.id === 'langModal') document.getElementById('langModal').classList.add('hidden');
+            };
+            document.getElementById('movieModal').onclick = (e) => {
+                if (e.target.id === 'movieModal') document.getElementById('movieModal').classList.add('hidden');
+            };
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function generateFallbackMovies() {
+            allMovies = Array.from({length: 50}, (_, i) => ({
+                id: i + 1,
+                title: `Movie ${i + 1}`,
+                original_title: `Original Movie ${i + 1}`,
+                poster_path: `/images/poster${i % 10 + 1}.jpg`,
+                overview: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.',
+                release_date: '2026-03-01',
+                runtime: 120 + Math.floor(Math.random() * 60),
+                vote_average: (6 + Math.random() * 3).toFixed(1),
+                stars: 'Actor 1, Actor 2, Actor 3',
+                genres: ['Action', 'Drama'],
+                platform: 'Netflix/Prime'
+            }));
+            renderMovies(allMovies.slice(0, 20));
+        }
+    </script>
+</body>
+</html>
