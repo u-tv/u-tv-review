@@ -1,0 +1,37 @@
+async function loadExtraMovieData(){
+
+const extra = await fetch("extra-movie-data/movie-extra.json");
+const extraData = await extra.json();
+
+const cards = document.querySelectorAll(".movie-card");
+
+cards.forEach(card => {
+
+const title = card.querySelector(".movie-title")?.innerText;
+
+const match = extraData.find(m => m.title === title);
+
+if(match){
+
+const info = document.createElement("div");
+
+info.className="extra-movie-info";
+
+info.innerHTML=`
+<p>📅 Release: ${match.release_date}</p>
+<p>📺 OTT: ${match.ott_platform}</p>
+<p>📅 OTT Release: ${match.ott_release}</p>
+<p>🎭 Genre: ${match.genre}</p>
+<p>⏱ Runtime: ${match.runtime}</p>
+<p>📊 Status: ${match.status}</p>
+`;
+
+card.appendChild(info);
+
+}
+
+});
+
+}
+
+document.addEventListener("DOMContentLoaded",loadExtraMovieData);
