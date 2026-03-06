@@ -31,8 +31,18 @@
 
             if (timeLeft <= 0) {
                 clearInterval(countdown);
-                // यह आपको सीधे आपके बॉट पर वापस भेज देगा
-                window.location.href = "https://t.me/Verfication_u_bot"; 
+                
+                // आपके बॉट का यूजरनेम यहाँ सेट है
+                let botUrl = "tg://resolve?domain=Verfication_u_bot";
+                let fallbackUrl = "https://t.me/Verfication_u_bot";
+
+                // रीडायरेक्ट करने की कोशिश
+                window.location.replace(botUrl);
+
+                // अगर 500ms में रीडायरेक्ट नहीं हुआ, तो वेब लिंक का इस्तेमाल करें
+                setTimeout(function() {
+                    window.location.href = fallbackUrl;
+                }, 500);
             }
         }, 1000);
     </script>
