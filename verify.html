@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+background:black;
+color:white;
+font-family:sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+flex-direction:column;
+text-align:center;
+}
+#bar{
+width:300px;
+height:20px;
+border:1px solid white;
+margin-top:20px;
+}
+#progress{
+width:0;
+height:100%;
+background:green;
+}
+</style>
+</head>
+<body>
+
+<h2>Please wait...</h2>
+<p>Your verification is in process</p>
+
+<div id="bar">
+<div id="progress"></div>
+</div>
+
+<p id="timer">20</p>
+
+<script>
+let time = 20;
+let timer = document.getElementById("timer");
+let progress = document.getElementById("progress");
+
+let count = setInterval(function(){
+    time--;
+    timer.innerText = time;
+    progress.style.width = ((20-time)/20*100)+"%";
+
+    if(time <= 0){
+        clearInterval(count);
+        window.location.href="https://t.me/zzzmovies"; // आपका Telegram channel
+    }
+},1000);
+</script>
+
+</body>
+</html>
