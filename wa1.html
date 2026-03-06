@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Verification</title>
+    <script>
+        window.open("https://omg10.com/4/10690220", "_blank");
+    </script>
+    <style>
+        body { background-color: #075E54; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #25D366; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #timer { font-size: 45px; color: #25D366; font-weight: bold; margin: 20px; }
+    </style>
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="80" alt="WhatsApp">
+    <h1>WhatsApp Verification</h1>
+    <p>सुरक्षा कारणों से, कृपया 20 सेकंड प्रतीक्षा करें।</p>
+    <div class="loader"></div>
+    <div id="timer">20</div>
+    <p>वेरिफिकेशन पूरा होते ही आप WhatsApp पर पहुँच जाएंगे।</p>
+
+    <script>
+        let timeLeft = 20;
+        let timerElement = document.getElementById('timer');
+        let countdown = setInterval(function() {
+            timeLeft--;
+            timerElement.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                window.location.replace("https://api.whatsapp.com/send?phone=919728199145&text=Verified%20Successfully");
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
