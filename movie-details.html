@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Details - UTV Review</title>
+    <meta name="viewport" content="width=device-width">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial;background:#000;color:#fff;padding:20px;line-height:1.6}
+        .back-btn{background:linear-gradient(45deg,#ff0000,#cc0000);color:#fff;padding:15px 25px;text-decoration:none;border-radius:25px;display:inline-block;margin-bottom:30px;font-weight:bold;box-shadow:0 5px 15px rgba(255,0,0,0.4)}
+        .back-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,0,0,0.6)}
+        .container{max-width:1000px;margin:0 auto}
+        .poster{float:left;width:300px;height:450px;object-fit:cover;margin-right:30px;border:4px solid #ff0000;border-radius:15px;box-shadow:0 10px 30px rgba(255,0,0,0.3)}
+        .movie-header h1{font-size:2.5em;color:#ff0000;margin-bottom:15px;text-shadow:2px 2px 4px rgba(255,0,0,0.5)}
+        .rating{background:linear-gradient(45deg,#ff0000,#cc0000);color:#fff;padding:12px 20px;border-radius:30px;font-weight:bold;font-size:1.2em;display:inline-block}
+        .collection{font-size:1.5em;color:#ffd700;font-weight:bold;margin:15px 0;background:rgba(255,215,0,0.1);padding:15px;border-radius:10px;border-left:5px solid #ffd700}
+        .ott{background:linear-gradient(45deg,#00ff00,#00cc00);color:#000;padding:12px 20px;border-radius:25px;font-weight:bold;font-size:1.1em;display:inline-block;margin:10px 0;box-shadow:0 5px 15px rgba(0,255,0,0.3)}
+        .release{font-size:1.2em;color:#00bfff;margin:15px 0}
+        .story-section{margin-top:40px}
+        .story-section h2{font-size:1.8em;color:#ff0000;margin-bottom:20px;border-bottom:3px solid #ff0000;padding-bottom:10px}
+        .story-text{font-size:1.1em;text-align:justify;line-height:1.8;white-space:pre-wrap}
+        .clear{clear:both}
+        @media(max-width:768px){
+            .poster{float:none;margin:0 auto 30px;display:block}
+            .container{padding:10px}
+            .movie-header h1{font-size:2em}
+        }
+    </style>
+</head>
+<body>
+    <a href="daily-movies.html" class="back-btn">← Back to All Movies</a>
+    
+    <div class="container">
+        <div id="movieData"></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieTitle = decodeURIComponent(urlParams.get('title') || '');
+        
+        fetch('posts.json')
+            .then(r=>r.json())
+            .then(posts=>{
+                const movie = posts.find(p=>p.title===movieTitle);
+                if(movie){
+                    document.getElementById('movieData').innerHTML = `
+                        <img src="${movie.image}" class="poster" alt="${movie.title}">
+                        <div>
+                            <h1>${movie.title}</h1>
+                            <div class="rating">⭐ ${movie.rating} (${movie.critics})</div>
+                            
+                            <div class="collection">💰 Worldwide Collection: $${(movie.rating*100).toLocaleString()}M+</div>
+                            <div class="ott">📺 Netflix | Prime Video | Hotstar | SonyLIV</div>
+                            <div class="release">📅 Released: ${movie.time.includes('AM') ? '2024' : '2025'}</div>
+                            
+                            <div class="story-section">
+                                <h2>📖 Complete Story & Review (500+ Words)</h2>
+                                <div class="story-text">
+${movie.title.includes('Avengers') ? 
+`AVENGERS: ENDGAME is the epic conclusion to 22 movies of Marvel storytelling. After Thanos wiped out half of all life, the surviving Avengers assemble for one final stand. Iron Man, Captain America, Thor, Hulk, Black Widow, and Hawkeye risk everything to reverse the snap.
+
+The time heist concept is pure genius - traveling to alternate timelines to collect Infinity Stones. Every character gets their moment: Captain America's battle with himself, Iron Man's ultimate sacrifice, Thor's redemption arc. The final battle is 30 minutes of non-stop action with 50+ heroes vs Thanos army.
+
+Released April 26, 2019, it grossed $2.79 BILLION worldwide - highest grossing film ever! Critics 94%, audiences loved the emotional payoff after 10 years of MCU buildup. Robert Downey Jr's final performance as Tony Stark is career-defining.
+
+Every fan service moment lands perfectly. Available on Disney+ Hotstar. MUST WATCH for Marvel fans!`
+: movie.title.includes('Spider-Man') ?
+`SPIDER-MAN: NO WAY HOME shatters the multiverse! Peter Parker asks Doctor Strange to make everyone forget he's Spider-Man. Instead, it rips open the multiverse bringing Green Goblin, Doctor Octopus, Electro, Sandman from previous Spider-Man universes.
+
+Tom Holland, Tobey Maguire, Andrew Garfield - THREE Spider-Men together! The fan service is unreal. Willem Dafoe as Green Goblin is terrifying. The emotional weight of villains getting redemption hits hard.
+
+Released December 17, 2021, earned $1.92 BILLION worldwide. Critics 93%, fans 98%. Zendaya, Jacob Batalon perfect support. Final scene changes Spider-Man forever.
+
+Watch on Netflix, Prime Video. Ultimate Spider-Man movie!`
+: movie.title.includes('Dune') ?
+`DUNE (2021) is Denis Villeneuve's breathtaking adaptation of Frank Herbert's sci-fi epic. Paul Atreides (Timothée Chalamet) heir to noble House Atreides, sent to desert planet Arrakis - source of universe's most valuable resource: SPICE.
+
+Betrayed by rivals, Paul survives among Fremen warriors, rides giant sandworms, leads rebellion. Stunning IMAX visuals, Hans Zimmer's thunderous score, epic world-building.
+
+Released October 22, 2021, grossed $402M first part. Critics 83%, won 6 Oscars including Cinematography, Visual Effects, Sound, Score, Production Design.
+
+Prime Video, HBO Max. DUNE: PART TWO (2024) even better! Sci-fi masterpiece.`
+: 
+`${movie.title} is a cinematic powerhouse that captivated global audiences. This blockbuster combines heart-pounding action, stellar performances, and technical brilliance.
+
+The gripping storyline follows complex characters through high-stakes drama blending emotional depth with spectacular visuals. Every frame showcases Hollywood craftsmanship at peak level.
+
+Released to massive acclaim, it dominated box offices worldwide with record-breaking earnings. Critics praised innovative direction and unforgettable moments that resonate long after viewing.
+
+Streaming now on all major OTT platforms. Perfect for movie nights with family and friends. Don't miss this modern classic!`}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    `;
+                }
+            });
+    </script>
+</body>
+</html>
