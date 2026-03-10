@@ -36,7 +36,7 @@
                 document.getElementById('movies').innerHTML = posts.map(post=>`
                     <div class="movie-card">
                         <a href="movie-details.html?title=${encodeURIComponent(post.title)}">
-                            <img src="${post.image}" class="movie-poster" alt="${post.title}">
+                            <img src="${post.image}" class="movie-poster" alt="${post.title}" title="Tap for Full Story">
                         </a>
                         <div class="movie-title">${post.title}</div>
                         <div>
