@@ -1,0 +1,41 @@
+name: 5x Daily Movies (25/day)
+on:
+  schedule:
+    - cron: '0 6 * * *'    # 6AM → 5 movies
+    - cron: '0 9 * * *'    # 9AM → 5 movies  
+    - cron: '0 15 * * *'   # 3PM → 5 movies
+    - cron: '0 18 * * *'   # 6PM → 5 movies
+    - cron: '0 21 * * *'   # 9PM → 5 movies
+  workflow_dispatch:
+jobs:
+  addmovies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          npm i node-fetch@2
+          node -pe "
+          const fetch = require('node-fetch');
+          const fs = require('fs');
+          fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=5bf61a62fd4647aa7debed7d6f2db079')
+            .then(r=>r.json())
+            .then(d=>{
+              const old = fs.readFileSync('posts.json','utf8') ? JSON.parse(fs.readFileSync('posts.json','utf8')) : [];
+              const newMovies = d.results.slice(0,5).map((m,i)=>({
+                title: m.title + ' Review ' + (i+1),
+                image: 'https://image.tmdb.org/t/p/w500' + m.poster_path,
+                rating: m.vote_average.toFixed(1),
+                critics: Math.round(m.vote_average*10) + '%',
+                review: 'Trending Now #' + (i+1),
+                time: new Date().toLocaleTimeString('en-IN')
+              }));
+              fs.writeFileSync('posts.json', JSON.stringify([...old, ...newMovies]));
+              console.log('Added 5 new movies!');
+            });
+          "
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 5x Daily movies added (25/day)
