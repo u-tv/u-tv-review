@@ -11,26 +11,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm i node-fetch@2
       - run: |
-          node -e "
-          const f=require('fs'),fetch=require('node-fetch');
-          fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=5bf61a62fd4647aa7debed7d6f2db079').then(r=>r.json()).then(async d=>{
-            if(!d.results) return console.log('No TMDB data');
-            const old=JSON.parse(await f.promises.readFile('posts.json','utf8')||'[]');
-            const m=d.results.slice(0,5).map(x=>{
-              const r=x.vote_average||0;
-              return{title:`${x.title} Review`,image:'https://image.tmdb.org/t/p/w500'+(x.poster_path||''),rating:r.toFixed(1),critics:Math.round(r*10)+'%',review:'Today trending!',time:new Date().toLocaleTimeString('en-IN'),is_certified:r>=7.5}
-            }).filter(x=>!old.some(y=>y.title===x.title));
-            const all=[...old,...m];
-            await f.promises.writeFile('posts.json',JSON.stringify(all,null,2));
-            console.log('Added '+m.length+' new movies. Total: '+all.length);
-          }).catch(e=>console.error('Error:',e.message));
+          npm i node-fetch@2
+          node -pe "
+          const fetch = require('node-fetch');
+          fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=5bf61a62fd4647aa7debed7d6f2db079')
+            .then(r=>r.json())
+            .then(d=>{
+              const fs = require('fs');
+              const old = fs.readFileSync('posts.json','utf8') ? JSON.parse(fs.readFileSync('posts.json','utf8')) : [];
+              const newMovies = d.results.slice(0,3).map(m=>({
+                title: m.title + ' Review',
+                image: 'https://image.tmdb.org/t/p/w500' + m.poster_path,
+                rating: m.vote_average.toFixed(1),
+                critics: Math.round(m.vote_average*10) + '%',
+                review: 'Today trending!',
+                time: new Date().toLocaleTimeString('en-IN')
+              }));
+              fs.writeFileSync('posts.json', JSON.stringify([...old, ...newMovies]));
+              console.log('Added 3 new movies!');
+            });
           "
-      - run: |
-          git config user.name github-actions[bot]
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts.json
-          if git diff --staged --quiet; then echo 'No changes'; exit 0; fi
-          git commit -m "✅ Daily 5 new movies added"
-          git push
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Daily new movies added
