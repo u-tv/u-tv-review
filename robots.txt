@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://u-tv-github-io.pages.dev/sitemap.xml
+Sitemap: https://u-tv-review.pages.dev/sitemap.xml
