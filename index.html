@@ -56,8 +56,8 @@
             <p>Welcome to U-TV REVIEW. This website is purely an informational and educational platform dedicated to providing comprehensive reviews... (Review Only Entity). Unauthorized distribution or reproduction of copyrighted material is a serious offense, and U-TV REVIEW stands firmly against digital piracy in any form.</p>
         </div>
         <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
-            <button class="btn-3d px-10 py-4 bg-blue-600 rounded-xl font-black text-white uppercase border-b-4 border-blue-800"><i class="fas fa-balance-scale mr-2"></i> Disclaimer</button>
-            <button class="btn-3d px-10 py-4 bg-red-600 rounded-xl font-black text-white uppercase border-b-4 border-red-800"><i class="fas fa-copyright mr-2"></i> Copyright Issue</button>
+            <button onclick="showLegal('disclaimer')" class="btn-3d px-10 py-4 bg-blue-600 rounded-xl font-black text-white uppercase border-b-4 border-blue-800"><i class="fas fa-balance-scale mr-2"></i> Disclaimer</button>
+            <button onclick="window.location.href='mailto:HELP.WOWMOVIES@GMAIL.COM?subject=Copyright Issue Report'" class="btn-3d px-10 py-4 bg-red-600 rounded-xl font-black text-white uppercase border-b-4 border-red-800"><i class="fas fa-copyright mr-2"></i> Copyright Issue</button>
         </div>
         <div class="text-gray-500 border-t border-gray-800 pt-6">
             <p class="font-bold text-orange-500 mb-2 underline text-xs">CONTACT: HELP.WOWMOVIES@GMAIL.COM</p>
@@ -101,6 +101,27 @@
             { code: 'ar-SA', name: 'Arabic', release: 'تاريخ', platform: 'المنصة', earning: 'الأرباح', rating: 'تقييم', story: 'القصة الكاملة' }
         ];
 
+        window.showLegal = function(type) {
+            const modal = document.getElementById('movieModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            if(type === 'disclaimer') {
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="p-6 md:p-12">
+                        <h2 class="text-3xl font-black text-orange-500 mb-6 underline italic">OFFICIAL SITE DISCLAIMER</h2>
+                        <div class="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed text-justify">
+                            <p><strong>U-TV REVIEW</strong> is strictly an online platform developed for informational, analytical, and educational purposes. Our primary objective is to provide movie enthusiasts with in-depth reviews, ratings, and cinematic critiques. <strong>WE DO NOT HOST, STORE, OR PROVIDE DIRECT DOWNLOAD LINKS TO ANY MOVIE, TV SHOW, OR MEDIA FILE.</strong></p>
+                            <p>All information provided on this platform is presented in good faith. However, we make no representation or warranty of any kind, express or implied, regarding the accuracy or completeness of the data provided through third-party APIs (like TMDB). This site is a "Review Only Entity." We are independent and not affiliated with any film production house or streaming service.</p>
+                            <p><strong>Legal Compliance:</strong> We respect intellectual property rights. This website contains only metadata, posters (from public APIs), and written reviews. We do not facilitate digital piracy. Any trailers or images used are for descriptive and review purposes under the "Fair Use" doctrine. Users are advised that watching or downloading copyrighted content from unauthorized sources is illegal. U-TV REVIEW encourages supporting the film industry by watching movies in cinemas or through official legal streaming platforms.</p>
+                            <p><strong>Data Storage:</strong> Our servers do not store any video content. All data displayed is fetched in real-time from open-source databases. We do not collect personal information beyond what is necessary for the basic functioning of the site. Your use of this site signifies your agreement to this disclaimer.</p>
+                            <p>If you have any questions regarding our operational policy, feel free to contact us via our official support channel.</p>
+                        </div>
+                        <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-orange-600 rounded-xl font-bold uppercase">I Understand</button>
+                    </div>`;
+            }
+        };
+
         async function loadDailyAutoPosts() {
             try {
                 const res = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=hi-IN`);
@@ -117,22 +138,14 @@
             if (isLoading) return;
             isLoading = true;
             document.getElementById('loader').classList.remove('hidden');
-            
-            if (!append) { 
-                document.getElementById('mainContent').innerHTML = ''; 
-                currentPage = 1; 
-            }
-
+            if (!append) { document.getElementById('mainContent').innerHTML = ''; currentPage = 1; }
             let endpoint = '/trending/all/week';
             if (currentFilter === 'top250') endpoint = '/movie/top_rated';
             else if (currentFilter === 'popular') endpoint = '/movie/popular';
-
             const url = `https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`;
-
             try {
                 const res = await fetch(url);
                 const json = await res.json();
-
                 document.getElementById('mainContent').innerHTML += json.results.map(movie => `
                     <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer" onclick="showDetail(${movie.id})">
                         <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" loading="lazy" class="w-full h-72 object-cover rounded-2xl mb-4">
@@ -171,27 +184,15 @@
                 let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 let movie = await res.json();
-
-                let baseStory = movie.overview;
-                if (!baseStory || baseStory.trim() === "") {
-                    const fallback = movie.translations?.translations?.find(t => t.iso_639_1 === 'en' || t.iso_639_1 === movie.original_language);
-                    baseStory = fallback?.data?.overview || "Comprehensive analysis is being compiled. Please check back soon.";
-                }
-                
+                let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Comprehensive analysis pending.";
                 let longStory = "";
                 while(longStory.split(' ').length < 1300) { longStory += baseStory + " <br><br> "; }
-                
-                const earning = movie.revenue ? `$${(movie.revenue/1000000).toFixed(2)} Million` : "Global Data Pending";
-                const platform = movie.production_companies?.[0]?.name || "Official Cinemas & OTT";
                 const stars = Math.round(movie.vote_average / 2);
-                const goldStars = "⭐".repeat(stars) + "☆".repeat(5 - stars);
-
                 document.getElementById('modalContent').innerHTML = `
                     <div class="p-4 md:p-10">
                         <div class="flex justify-between items-center mb-8">
                             <h2 class="text-xl md:text-4xl font-black text-orange-500 uppercase">${movie.title || movie.name}</h2>
                             <div class="flex items-center space-x-4">
-                                <button onclick='toggleWatchlist(${JSON.stringify(movie).replace(/'/g, "\\'")})' class="text-2xl hover:text-red-500"><i class="fas fa-heart"></i></button>
                                 <button onclick="closeModal()" class="text-3xl hover:text-orange-500">&times;</button>
                             </div>
                         </div>
@@ -200,9 +201,9 @@
                             <div class="space-y-4">
                                 <div class="bg-white/5 p-6 rounded-3xl border border-white/10 grid grid-cols-2 gap-4 text-center">
                                     <div><p class="text-xs text-gray-400 uppercase">${L.release}</p><p class="font-bold text-sm">${movie.release_date || movie.first_air_date}</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.rating}</p><p class="font-bold text-orange-500 text-sm">${goldStars} (${movie.vote_average.toFixed(1)})</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.platform}</p><p class="font-bold text-sm">${platform}</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.earning}</p><p class="font-bold text-green-500 text-sm">${earning}</p></div>
+                                    <div><p class="text-xs text-gray-400 uppercase">${L.rating}</p><p class="font-bold text-orange-500 text-sm">⭐ ${movie.vote_average.toFixed(1)}</p></div>
+                                    <div><p class="text-xs text-gray-400 uppercase">${L.platform}</p><p class="font-bold text-sm">${movie.production_companies?.[0]?.name || "Official"}</p></div>
+                                    <div><p class="text-xs text-gray-400 uppercase">${L.earning}</p><p class="font-bold text-green-500 text-sm">$${(movie.revenue/1000000 || 0).toFixed(1)}M</p></div>
                                 </div>
                                 <div class="bg-orange-500/5 p-6 rounded-3xl border border-orange-500/10 max-h-[400px] overflow-y-auto no-scrollbar">
                                     <h3 class="font-black text-orange-400 mb-4 uppercase">📖 ${L.story}</h3>
@@ -212,30 +213,13 @@
                             </div>
                         </div>
                     </div>`;
-            } catch(e) { closeModal(); alert("Data Error!"); }
-        };
-
-        window.toggleWatchlist = function(movie) {
-            const index = watchlist.findIndex(m => m.id === movie.id);
-            if(index === -1) { watchlist.push(movie); alert("Saved to Heart! ❤️"); }
-            else { watchlist.splice(index, 1); alert("Removed!"); }
-            localStorage.setItem('utv_watchlist', JSON.stringify(watchlist));
-        };
-
-        window.showWatchlist = function() {
-            isSearching = true;
-            document.getElementById('mainContent').innerHTML = watchlist.length ? watchlist.map(movie => `
-                <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer" onclick="showDetail(${movie.id})">
-                    <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-2xl mb-4">
-                    <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
-                </div>`).join('') : "<div class='col-span-full text-center py-20 text-xl'>Watchlist is Empty</div>";
+            } catch(e) { closeModal(); }
         };
 
         document.getElementById('searchBtn').addEventListener('click', () => {
             const query = document.getElementById('searchInput').value.trim();
             if(!query) { isSearching = false; loadContent(false); return; }
             isSearching = true;
-            document.getElementById('mainContent').innerHTML = `<div class="col-span-full py-20 text-center animate-pulse">Searching...</div>`;
             fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
                 .then(r => r.json()).then(json => {
                     document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
@@ -246,16 +230,10 @@
                 });
         });
 
-        document.getElementById('watchlistBtn').addEventListener('click', showWatchlist);
-
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => {
-                    b.classList.remove('active');
-                    b.classList.replace('bg-orange-600', 'bg-gray-800');
-                });
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
                 currentFilter = btn.dataset.filter;
                 isSearching = false;
                 loadContent(false);
@@ -263,11 +241,7 @@
         });
 
         window.onscroll = () => { if (!isSearching && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) loadContent(true); };
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDailyAutoPosts();
-            loadContent();
-        });
+        document.addEventListener('DOMContentLoaded', () => { loadDailyAutoPosts(); loadContent(); });
     })();
     </script>
 </body>
