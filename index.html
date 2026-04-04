@@ -4,9 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>U-TV REVIEW - Ultimate Movie Platform</title>
+    
+    <meta property="og:title" content="U-TV REVIEW - Ultimate Movie Platform">
+    <meta property="og:description" content="Get detailed movie reviews in 20 languages including Hindi, English, and more.">
+    <meta property="og:image" content="https://u-tv-review.pages.dev/og-image.jpg">
+    <meta property="og:url" content="https://u-tv-review.pages.dev/">
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://shy-queen-5392.vikkythakur1995.workers.dev/">
     <link rel="canonical" href="https://u-tv-review.pages.dev/" />
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "U-TV REVIEW",
+      "url": "https://u-tv-review.pages.dev/",
+      "description": "Professional Movie Review Platform in 20 Languages",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://u-tv-review.pages.dev/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -83,7 +105,7 @@
             { code: 'en-US', name: 'English', release: 'Release Date', platform: 'Platform', earning: 'Total Collection', rating: 'Rating', story: 'Full Story & Analysis' },
             { code: 'te-IN', name: 'Telugu', release: 'విడుదల తేదీ', platform: 'ప్లాట్‌ఫారమ్', earning: 'మొత్తం సేకరణ', rating: 'రేటింగ్', story: 'పూర్తి కథ మరియు విశ్લેషణ' },
             { code: 'ta-IN', name: 'Tamil', release: 'வெளியீட்டு தேதி', platform: 'மேடை', earning: 'மொத்த வசூல்', rating: 'மதிப்பீடு', story: 'முழு கதை और பகுப்பாய்வு' },
-            { code: 'ml-IN', name: 'Malayalam', release: 'റിലീസ് തീയതി', platform: 'പ്ലാറ്റ്‌ഫോം', earning: 'ആകെ കളക്ഷൻ', rating: 'റേറ്റിംഗ്', story: 'പൂർണ്ണമായ വിശകലനം' },
+            { code: 'ml-IN', name: 'Malayalam', release: 'റിലീസ് தീയതി', platform: 'പ്ലാറ്റ്‌ഫോം', earning: 'ആകെ കളക്ഷൻ', rating: 'റേറ്റിംഗ്', story: 'പൂർണ്ണമായ വിശകലനം' },
             { code: 'kn-IN', name: 'Kannada', release: 'ಬಿಡುಗಡೆ ದಿನಾಂಕ', platform: 'ವೇದಿಕೆ', earning: 'ಒಟ್ಟು ಸಂಗ್ರಹ', rating: 'ರೇಟಿಂಗ್', story: 'ಪೂರ್ಣ ಕಥೆ' },
             { code: 'pa-IN', name: 'Punjabi', release: 'ਰਿਲੀਜ਼ ਤਾਰੀਖ', platform: 'ਪਲੇਟਫਾਰਮ', earning: 'ਕੁੱਲ ਕਮਾਈ', rating: 'ਰੇਟਿੰਗ', story: 'ਪੂਰੀ ਕਹਾਣੀ' },
             { code: 'bn-IN', name: 'Bengali', release: 'মুক্তির তারিখ', platform: 'প্ল্যাটফর্ম', earning: 'মোট সংগ্রহ', rating: 'রেটিং', story: 'পুরো গল্প' },
@@ -100,6 +122,16 @@
             { code: 'zh-CN', name: 'Chinese', release: '日期', platform: '平台', earning: '总票房', rating: '评分', story: '完整故事' },
             { code: 'ar-SA', name: 'Arabic', release: 'تاريخ', platform: 'المنصة', earning: 'الأرباح', rating: 'تقييم', story: 'القصة الكاملة' }
         ];
+
+        window.shareMovie = function(id, title, platform) {
+            const url = `https://u-tv-review.pages.dev/`;
+            const text = `Check out the review of ${title} on U-TV REVIEW: `;
+            if(platform === 'whatsapp') {
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
+            } else if(platform === 'telegram') {
+                window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+            }
+        };
 
         window.showLegal = function(type) {
             const modal = document.getElementById('movieModal');
@@ -147,10 +179,16 @@
                 const res = await fetch(url);
                 const json = await res.json();
                 document.getElementById('mainContent').innerHTML += json.results.map(movie => `
-                    <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer" onclick="showDetail(${movie.id})">
-                        <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" loading="lazy" class="w-full h-72 object-cover rounded-2xl mb-4">
-                        <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
-                        <div class="text-orange-400 font-black">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
+                    <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer relative group">
+                        <div onclick="showDetail(${movie.id})">
+                            <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" loading="lazy" class="w-full h-72 object-cover rounded-2xl mb-4">
+                            <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
+                            <div class="text-orange-400 font-black mb-10">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 flex gap-2">
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-xs font-bold transition-all"><i class="fab fa-whatsapp"></i> Share</button>
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-xs font-bold transition-all"><i class="fab fa-telegram"></i> Share</button>
+                        </div>
                     </div>`).join('');
                 currentPage++;
             } catch (e) { console.error("Load error"); }
@@ -187,7 +225,6 @@
                 let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Comprehensive analysis pending.";
                 let longStory = "";
                 while(longStory.split(' ').length < 1300) { longStory += baseStory + " <br><br> "; }
-                const stars = Math.round(movie.vote_average / 2);
                 document.getElementById('modalContent').innerHTML = `
                     <div class="p-4 md:p-10">
                         <div class="flex justify-between items-center mb-8">
@@ -209,6 +246,10 @@
                                     <h3 class="font-black text-orange-400 mb-4 uppercase">📖 ${L.story}</h3>
                                     <p class="text-gray-300 text-sm md:text-base leading-relaxed text-justify italic">${longStory}</p>
                                 </div>
+                                <div class="flex gap-4">
+                                    <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold uppercase"><i class="fab fa-whatsapp mr-2"></i> WhatsApp</button>
+                                    <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-500 rounded-xl font-bold uppercase"><i class="fab fa-telegram mr-2"></i> Telegram</button>
+                                </div>
                                 <button onclick="showDetail(${id})" class="w-full py-3 bg-gray-800 rounded-xl text-xs text-gray-400 hover:text-white uppercase">Switch Language</button>
                             </div>
                         </div>
@@ -223,9 +264,15 @@
             fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
                 .then(r => r.json()).then(json => {
                     document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
-                        <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer" onclick="showDetail(${movie.id})">
-                            <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-2xl mb-4">
-                            <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
+                        <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer relative group">
+                            <div onclick="showDetail(${movie.id})">
+                                <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-2xl mb-4">
+                                <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4 flex gap-2">
+                                <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded-lg text-xs font-bold transition-all"><i class="fab fa-whatsapp"></i> Share</button>
+                                <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-500 rounded-lg text-xs font-bold transition-all"><i class="fab fa-telegram"></i> Share</button>
+                            </div>
                         </div>`).join('') || "<div class='col-span-full text-center'>No Results Found</div>";
                 });
         });
