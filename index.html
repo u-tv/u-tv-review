@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U-TV REVIEW - Ultimate Movie Platform</title>
+    
+    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
+    <title id="meta-title">U-TV REVIEW - Ultimate Movie Platform</title>
+    <meta name="description" id="meta-desc" content="Professional Movie Review Platform in 20 Languages. Get detailed movie reviews, ratings, and cinematic critiques.">
+    <link rel="canonical" id="meta-canon" href="https://u-tv-review.pages.dev/" />
     
     <meta property="og:title" content="U-TV REVIEW - Ultimate Movie Platform">
     <meta property="og:description" content="Get detailed movie reviews in 20 languages including Hindi, English, and more.">
@@ -12,7 +16,6 @@
     
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://shy-queen-5392.vikkythakur1995.workers.dev/">
-    <link rel="canonical" href="https://u-tv-review.pages.dev/" />
     
     <script type="application/ld+json">
     {
@@ -98,7 +101,10 @@
         const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
         const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
         let currentPage = 1, currentFilter = 'trending', isSearching = false, isLoading = false;
-        let watchlist = JSON.parse(localStorage.getItem('utv_watchlist')) || [];
+        
+        // FIX: SYNC URL WITH SITEMAP
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieID = urlParams.get('m') || urlParams.get('id');
 
         const languages = [
             { code: 'hi-IN', name: 'Hindi', release: 'रिलीज़ डेट', platform: 'प्लेटफॉर्म', earning: 'कुल कमाई', rating: 'रेटिंग', story: 'पूरी कहानी और विश्लेषण' },
@@ -124,7 +130,7 @@
         ];
 
         window.shareMovie = function(id, title, platform) {
-            const url = `https://u-tv-review.pages.dev/`;
+            const url = `https://u-tv-review.pages.dev/?m=${id}`;
             const text = `Check out the review of ${title} on U-TV REVIEW: `;
             if(platform === 'whatsapp') {
                 window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
@@ -143,11 +149,7 @@
                     <div class="p-6 md:p-12">
                         <h2 class="text-3xl font-black text-orange-500 mb-6 underline italic">OFFICIAL SITE DISCLAIMER</h2>
                         <div class="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed text-justify">
-                            <p><strong>U-TV REVIEW</strong> is strictly an online platform developed for informational, analytical, and educational purposes. Our primary objective is to provide movie enthusiasts with in-depth reviews, ratings, and cinematic critiques. <strong>WE DO NOT HOST, STORE, OR PROVIDE DIRECT DOWNLOAD LINKS TO ANY MOVIE, TV SHOW, OR MEDIA FILE.</strong></p>
-                            <p>All information provided on this platform is presented in good faith. However, we make no representation or warranty of any kind, express or implied, regarding the accuracy or completeness of the data provided through third-party APIs (like TMDB). This site is a "Review Only Entity." We are independent and not affiliated with any film production house or streaming service.</p>
-                            <p><strong>Legal Compliance:</strong> We respect intellectual property rights. This website contains only metadata, posters (from public APIs), and written reviews. We do not facilitate digital piracy. Any trailers or images used are for descriptive and review purposes under the "Fair Use" doctrine. Users are advised that watching or downloading copyrighted content from unauthorized sources is illegal. U-TV REVIEW encourages supporting the film industry by watching movies in cinemas or through official legal streaming platforms.</p>
-                            <p><strong>Data Storage:</strong> Our servers do not store any video content. All data displayed is fetched in real-time from open-source databases. We do not collect personal information beyond what is necessary for the basic functioning of the site. Your use of this site signifies your agreement to this disclaimer.</p>
-                            <p>If you have any questions regarding our operational policy, feel free to contact us via our official support channel.</p>
+                            <p><strong>U-TV REVIEW</strong> is strictly an online platform developed for informational, analytical, and educational purposes. WE DO NOT HOST OR PROVIDE DOWNLOAD LINKS.</p>
                         </div>
                         <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-orange-600 rounded-xl font-bold uppercase">I Understand</button>
                     </div>`;
@@ -163,6 +165,9 @@
                         <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-64 object-cover rounded-2xl border border-white/10 group-hover:border-orange-500 transition-all">
                         <div class="mt-2 text-sm font-bold line-clamp-1">${movie.title || movie.name}</div>
                     </div>`).join('');
+                
+                // AUTO-LOAD MOVIE FROM URL PARAMETER
+                if(movieID) fetchFullDetails(movieID, 'hi-IN');
             } catch (e) { console.log("Daily Picks Error"); }
         }
 
@@ -200,6 +205,7 @@
             const modal = document.getElementById('movieModal');
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            window.history.pushState({}, '', '?m=' + id);
             document.getElementById('modalContent').innerHTML = `
                 <div class="p-8 text-center">
                     <h2 class="text-3xl font-black text-orange-500 mb-6 underline italic uppercase">Select Language</h2>
@@ -213,6 +219,7 @@
         window.closeModal = function() {
             document.getElementById('movieModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+            window.history.pushState({}, '', window.location.pathname);
         };
 
         window.fetchFullDetails = async function(id, langCode) {
@@ -222,16 +229,20 @@
                 let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 let movie = await res.json();
-                let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Comprehensive analysis pending.";
+                
+                // Update SEO Meta Dynamically
+                document.getElementById('meta-title').innerText = `${movie.title || movie.name} Review - U-TV REVIEW`;
+                
+                let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Analysis pending.";
                 let longStory = "";
                 while(longStory.split(' ').length < 1300) { longStory += baseStory + " <br><br> "; }
+                
+                document.getElementById('movieModal').classList.remove('hidden');
                 document.getElementById('modalContent').innerHTML = `
                     <div class="p-4 md:p-10">
                         <div class="flex justify-between items-center mb-8">
                             <h2 class="text-xl md:text-4xl font-black text-orange-500 uppercase">${movie.title || movie.name}</h2>
-                            <div class="flex items-center space-x-4">
-                                <button onclick="closeModal()" class="text-3xl hover:text-orange-500">&times;</button>
-                            </div>
+                            <button onclick="closeModal()" class="text-3xl hover:text-orange-500">&times;</button>
                         </div>
                         <div class="grid lg:grid-cols-2 gap-10">
                             <div><img src="${IMG_BASE + movie.poster_path}" class="rounded-3xl w-full border-2 border-orange-500/20 shadow-2xl"></div>
@@ -239,8 +250,6 @@
                                 <div class="bg-white/5 p-6 rounded-3xl border border-white/10 grid grid-cols-2 gap-4 text-center">
                                     <div><p class="text-xs text-gray-400 uppercase">${L.release}</p><p class="font-bold text-sm">${movie.release_date || movie.first_air_date}</p></div>
                                     <div><p class="text-xs text-gray-400 uppercase">${L.rating}</p><p class="font-bold text-orange-500 text-sm">⭐ ${movie.vote_average.toFixed(1)}</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.platform}</p><p class="font-bold text-sm">${movie.production_companies?.[0]?.name || "Official"}</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.earning}</p><p class="font-bold text-green-500 text-sm">$${(movie.revenue/1000000 || 0).toFixed(1)}M</p></div>
                                 </div>
                                 <div class="bg-orange-500/5 p-6 rounded-3xl border border-orange-500/10 max-h-[400px] overflow-y-auto no-scrollbar">
                                     <h3 class="font-black text-orange-400 mb-4 uppercase">📖 ${L.story}</h3>
@@ -250,7 +259,6 @@
                                     <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold uppercase"><i class="fab fa-whatsapp mr-2"></i> WhatsApp</button>
                                     <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-500 rounded-xl font-bold uppercase"><i class="fab fa-telegram mr-2"></i> Telegram</button>
                                 </div>
-                                <button onclick="showDetail(${id})" class="w-full py-3 bg-gray-800 rounded-xl text-xs text-gray-400 hover:text-white uppercase">Switch Language</button>
                             </div>
                         </div>
                     </div>`;
@@ -269,11 +277,7 @@
                                 <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-2xl mb-4">
                                 <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
                             </div>
-                            <div class="absolute bottom-4 left-4 right-4 flex gap-2">
-                                <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded-lg text-xs font-bold transition-all"><i class="fab fa-whatsapp"></i> Share</button>
-                                <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-500 rounded-lg text-xs font-bold transition-all"><i class="fab fa-telegram"></i> Share</button>
-                            </div>
-                        </div>`).join('') || "<div class='col-span-full text-center'>No Results Found</div>";
+                        </div>`).join('');
                 });
         });
 
