@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
-    <title id="meta-title">U-TV REVIEW - Ultimate Movie Platform</title>
-    <meta name="description" id="meta-desc" content="Professional Movie Review Platform in 20 Languages. Get detailed movie reviews, ratings, and cinematic critiques.">
-    <link rel="canonical" id="meta-canon" href="https://u-tv-review.pages.dev/" />
     
-    <meta property="og:title" content="U-TV REVIEW - Ultimate Movie Platform">
-    <meta property="og:description" content="Get detailed movie reviews in 20 languages including Hindi, English, and more.">
+    <title id="meta-title">${MOVIE_TITLE}</title>
+    <meta name="description" id="meta-desc" content="${MOVIE_DESC}">
+    <link rel="canonical" id="meta-canon" href="${CANONICAL_URL}" />
+    
+    <meta property="og:title" content="${MOVIE_TITLE}">
+    <meta property="og:description" content="${MOVIE_DESC}">
     <meta property="og:image" content="https://u-tv-review.pages.dev/og-image.jpg">
-    <meta property="og:url" content="https://u-tv-review.pages.dev/">
+    <meta property="og:url" content="${CANONICAL_URL}">
     
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://shy-queen-5392.vikkythakur1995.workers.dev/">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     
     <script type="application/ld+json">
     {
@@ -102,7 +103,6 @@
         const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
         let currentPage = 1, currentFilter = 'trending', isSearching = false, isLoading = false;
         
-        // FIX: SYNC URL WITH SITEMAP
         const urlParams = new URLSearchParams(window.location.search);
         const movieID = urlParams.get('m') || urlParams.get('id');
 
@@ -121,7 +121,7 @@
             { code: 'fr-FR', name: 'French', release: 'Date', platform: 'Plateforme', earning: 'Recettes', rating: 'Note', story: 'Histoire' },
             { code: 'de-DE', name: 'German', release: 'Datum', platform: 'Plattform', earning: 'Einnahmen', rating: 'Bewertung', story: 'Vollständige Geschichte' },
             { code: 'it-IT', name: 'Italian', release: 'Data', platform: 'Piattaforma', earning: 'Incassi', rating: 'Voto', story: 'Storia completa' },
-            { code: 'pt-BR', name: 'Portuguese', release: 'Data', platform: 'Plataforma', earning: 'Arrecadação', rating: 'Avaliação', story: 'História' },
+            { code: 'pt-BR', name: 'Portuguese', release: 'Data', platform: 'Plataforma', earning: 'Arrecadação', rating: 'Avaliação', story: 'Historia' },
             { code: 'ru-RU', name: 'Russian', release: 'Дата', platform: 'Платформа', earning: 'Сборы', rating: 'Рейтинг', story: 'Полная история' },
             { code: 'ja-JP', name: 'Japanese', release: '発売日', platform: 'プラットフォーム', earning: '興行収入', rating: '評価', story: 'フルストーリー' },
             { code: 'ko-KR', name: 'Korean', release: '출시일', platform: '플랫폼', earning: '총 수입', rating: '평점', story: '전체 이야기' },
@@ -166,7 +166,6 @@
                         <div class="mt-2 text-sm font-bold line-clamp-1">${movie.title || movie.name}</div>
                     </div>`).join('');
                 
-                // AUTO-LOAD MOVIE FROM URL PARAMETER
                 if(movieID) fetchFullDetails(movieID, 'hi-IN');
             } catch (e) { console.log("Daily Picks Error"); }
         }
@@ -229,9 +228,6 @@
                 let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
                 let movie = await res.json();
-                
-                // Update SEO Meta Dynamically
-                document.getElementById('meta-title').innerText = `${movie.title || movie.name} Review - U-TV REVIEW`;
                 
                 let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Analysis pending.";
                 let longStory = "";
