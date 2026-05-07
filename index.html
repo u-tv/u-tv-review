@@ -3,98 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
     
-    <title id="meta-title">${MOVIE_TITLE}</title>
+    <title id="meta-title">${MOVIE_TITLE} - U-TV REVIEW</title>
     <meta name="description" id="meta-desc" content="${MOVIE_DESC}">
     <link rel="canonical" id="meta-canon" href="${CANONICAL_URL}" />
     
-    <meta property="og:title" content="${MOVIE_TITLE}">
-    <meta property="og:description" content="${MOVIE_DESC}">
-    <meta property="og:image" content="https://u-tv-review.pages.dev/og-image.jpg">
-    <meta property="og:url" content="${CANONICAL_URL}">
-    
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "U-TV REVIEW",
-      "url": "https://u-tv-review.pages.dev/",
-      "description": "Professional Movie Review Platform in 20 Languages",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://u-tv-review.pages.dev/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root { 
+            --utv-red: #e50914; 
+            --bg-deep: #050505; 
+            --card-bg: #121212;
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-3d { transition: all 0.2s; box-shadow: 0 5px 0 rgba(0,0,0,0.4); }
-        .btn-3d:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
-        * { transition: background-color 0.1s ease-in-out; }
-        .filter-btn.active { background-color: #ea580c !important; font-weight: 900; border-color: #ea580c; }
+        body { 
+            background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Fixed Theme Elements */
+        nav { 
+            background: rgba(0,0,0,0.9) !important; 
+            backdrop-filter: blur(20px); 
+            border-bottom: 2px solid var(--utv-red) !important; 
+        }
+        .filter-btn.active { 
+            background-color: var(--utv-red) !important; 
+            border-color: var(--utv-red) !important;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+        .movie-card-premium {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .movie-card-premium:hover {
+            transform: scale(1.05);
+            border-color: var(--utv-red);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .btn-red {
+            background: var(--utv-red) !important;
+            transition: 0.3s;
+        }
+        .btn-red:hover {
+            background: #ff0f1e !important;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        }
+        #movieModal { background: rgba(0,0,0,0.98) !important; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
+<body class="min-h-screen">
     
-    <nav class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-xl border-b border-orange-500/30 p-2 md:p-4 flex justify-between items-center">
+    <nav class="fixed top-0 w-full z-50 p-3 md:p-4 flex justify-between items-center shadow-2xl">
         <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
-            <i class="fas fa-crown text-2xl md:text-3xl text-orange-500"></i>
-            <span class="font-black text-xl md:text-2xl bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">U-TV</span>
+            <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
         </div>
         <div class="flex items-center space-x-2 flex-1 justify-end">
-            <div class="relative flex items-center space-x-1 md:space-x-2 w-full max-w-[250px] md:max-w-md">
-                <input id="searchInput" type="text" placeholder="Search movies..." class="px-3 py-2 md:px-5 md:py-3 bg-gray-800/50 border border-gray-600 rounded-xl md:rounded-2xl w-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all text-sm md:text-base">
-                <button id="searchBtn" class="px-3 py-2 md:px-6 md:py-3 bg-orange-600 hover:bg-orange-500 rounded-xl md:rounded-2xl font-bold transition-all text-xs md:text-base">GO</button>
+            <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
+                <input id="searchInput" type="text" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
+                <button id="searchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
             </div>
-            <button id="watchlistBtn" class="p-2 md:p-3 bg-gray-800 hover:bg-orange-500 rounded-xl md:rounded-2xl transition-all"><i class="fas fa-heart text-lg md:text-xl"></i></button>
         </div>
     </nav>
 
-    <div class="fixed top-16 md:top-20 w-full z-40 bg-black/80 backdrop-blur-md p-4 md:p-6 border-b border-gray-800">
-        <div class="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
-            <button class="filter-btn active whitespace-nowrap px-6 py-3 bg-gray-800 border border-gray-700 rounded-2xl transition-all" data-filter="trending">Trending</button>
-            <button class="filter-btn whitespace-nowrap px-6 py-3 bg-gray-800 border border-gray-700 rounded-2xl transition-all" data-filter="top250">Top 250</button>
-            <button class="filter-btn whitespace-nowrap px-6 py-3 bg-gray-800 border border-gray-700 rounded-2xl transition-all" data-filter="popular">Popular</button>
+    <div class="fixed top-[70px] w-full z-40 bg-black/90 backdrop-blur-md p-4 border-b border-zinc-800">
+        <div class="flex space-x-3 overflow-x-auto no-scrollbar max-w-6xl mx-auto">
+            <button class="filter-btn active whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="trending">Trending</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="top250">Top 250</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="popular">Popular</button>
         </div>
     </div>
 
-    <div class="pt-44 md:pt-52 pb-8 px-4 md:px-6">
-        <div id="dailyFeaturedSection" class="mb-12">
-            <h2 class="text-2xl md:text-3xl font-black text-orange-400 mb-6 flex items-center"><i class="fas fa-fire-alt mr-3"></i> Special Picks</h2>
-            <div id="dailyGrid" class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 p-4 bg-orange-500/5 border border-orange-500/20 rounded-3xl"></div>
+    <div class="pt-40 pb-10 px-4 max-w-[1600px] mx-auto">
+        <div id="dailyFeaturedSection" class="mb-10">
+            <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 flex items-center uppercase tracking-widest"><i class="fas fa-bolt mr-2"></i> Special Picks</h2>
+            <div id="dailyGrid" class="grid grid-cols-2 lg:grid-cols-5 gap-4"></div>
         </div>
-        <div id="mainContent" class="grid grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-4 md:gap-8"></div>
-        <div id="loader" class="flex justify-center py-10 hidden"><div class="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div></div>
+
+        <h2 class="text-xl font-black text-white mb-6 uppercase tracking-widest border-l-4 border-[var(--utv-red)] pl-3">Explore Reviews</h2>
+        <div id="mainContent" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        
+        <div id="loader" class="flex justify-center py-10 hidden">
+            <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
+        </div>
     </div>
 
-    <footer class="bg-black border-t border-gray-800 p-8 mt-10 text-center">
-        <div class="max-w-4xl mx-auto mb-10 text-justify text-gray-400 text-sm md:text-base leading-relaxed">
-            <h3 class="text-orange-500 font-bold text-xl mb-4 text-center">OFFICIAL DISCLAIMER</h3>
-            <p>Welcome to U-TV REVIEW. This website is purely an informational and educational platform dedicated to providing comprehensive reviews... (Review Only Entity). Unauthorized distribution or reproduction of copyrighted material is a serious offense, and U-TV REVIEW stands firmly against digital piracy in any form.</p>
+    <footer class="bg-black border-t border-zinc-800 p-10 text-center">
+        <div class="max-w-4xl mx-auto mb-8 text-zinc-500 text-xs leading-relaxed">
+            <p class="mb-4 text-[var(--utv-red)] font-bold">U-TV REVIEW | INFORMATIONAL ENTITY</p>
+            <p>U-TV REVIEW stands firmly against digital piracy. This platform is for review and educational analysis only.</p>
         </div>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
-            <button onclick="showLegal('disclaimer')" class="btn-3d px-10 py-4 bg-blue-600 rounded-xl font-black text-white uppercase border-b-4 border-blue-800"><i class="fas fa-balance-scale mr-2"></i> Disclaimer</button>
-            <button onclick="window.location.href='mailto:HELP.WOWMOVIES@GMAIL.COM?subject=Copyright Issue Report'" class="btn-3d px-10 py-4 bg-red-600 rounded-xl font-black text-white uppercase border-b-4 border-red-800"><i class="fas fa-copyright mr-2"></i> Copyright Issue</button>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="showLegal('disclaimer')" class="px-8 py-3 bg-zinc-800 rounded-lg font-bold text-xs uppercase border border-zinc-700 hover:bg-zinc-700">Disclaimer</button>
+            <button onclick="window.location.href='mailto:HELP.WOWMOVIES@GMAIL.COM'" class="px-8 py-3 bg-red-900/30 text-red-500 rounded-lg font-bold text-xs uppercase border border-red-900/50">Copyright Issue</button>
         </div>
-        <div class="text-gray-500 border-t border-gray-800 pt-6">
-            <p class="font-bold text-orange-500 mb-2 underline text-xs">CONTACT: HELP.WOWMOVIES@GMAIL.COM</p>
-            <p class="mt-4 text-[10px]">© 2026 U-TV REVIEW - ALL RIGHTS RESERVED</p>
-        </div>
+        <p class="mt-8 text-[10px] text-zinc-600">© 2026 U-TV REVIEW - ALL RIGHTS RESERVED</p>
     </footer>
 
-    <div id="movieModal" class="fixed inset-0 z-[60] hidden bg-black/95 backdrop-blur-md overflow-y-auto">
-        <div class="max-w-6xl mx-auto my-16 p-4 md:p-8">
-            <div class="bg-gray-900 border border-orange-500/30 rounded-3xl overflow-hidden" id="modalContent"></div>
-        </div>
+    <div id="movieModal" class="fixed inset-0 z-[60] hidden overflow-y-auto">
+        <div class="max-w-5xl mx-auto my-10 p-4" id="modalContent"></div>
     </div>
 
     <script>
@@ -109,51 +121,27 @@
         const languages = [
             { code: 'hi-IN', name: 'Hindi', release: 'रिलीज़ डेट', platform: 'प्लेटफॉर्म', earning: 'कुल कमाई', rating: 'रेटिंग', story: 'पूरी कहानी और विश्लेषण' },
             { code: 'en-US', name: 'English', release: 'Release Date', platform: 'Platform', earning: 'Total Collection', rating: 'Rating', story: 'Full Story & Analysis' },
-            { code: 'te-IN', name: 'Telugu', release: 'విడుదల తేదీ', platform: 'ప్లాట్‌ఫారమ్', earning: 'మొత్తం సేకరణ', rating: 'రేటింగ్', story: 'పూర్తి కథ మరియు విశ్લેషణ' },
-            { code: 'ta-IN', name: 'Tamil', release: 'வெளியீட்டு தேதி', platform: 'மேடை', earning: 'மொத்த வசூல்', rating: 'மதிப்பீடு', story: 'முழு கதை और பகுப்பாய்வு' },
-            { code: 'ml-IN', name: 'Malayalam', release: 'റിലീസ് தീയതി', platform: 'പ്ലാറ്റ്‌ഫോം', earning: 'ആകെ കളക്ഷൻ', rating: 'റേറ്റിംഗ്', story: 'പൂർണ്ണമായ വിശകലനം' },
-            { code: 'kn-IN', name: 'Kannada', release: 'ಬಿಡುಗಡೆ ದಿನಾಂಕ', platform: 'ವೇದಿಕೆ', earning: 'ಒಟ್ಟು ಸಂಗ್ರಹ', rating: 'ರೇಟಿಂಗ್', story: 'ಪೂರ್ಣ ಕಥೆ' },
-            { code: 'pa-IN', name: 'Punjabi', release: 'ਰਿਲੀਜ਼ ਤਾਰੀਖ', platform: 'ਪਲੇਟਫਾਰਮ', earning: 'ਕੁੱਲ ਕਮਾਈ', rating: 'ਰੇਟਿੰਗ', story: 'ਪੂਰੀ ਕਹਾਣੀ' },
-            { code: 'bn-IN', name: 'Bengali', release: 'মুক্তির তারিখ', platform: 'প্ল্যাটফর্ম', earning: 'মোট সংগ্রহ', rating: 'রেটিং', story: 'পুরো গল্প' },
-            { code: 'mr-IN', name: 'Marathi', release: 'रिलीजची तारीख', platform: 'प्लॅटफॉर्म', earning: 'एकूण कमाई', rating: 'रेटिंग', story: 'पूर्ण कथा' },
-            { code: 'gu-IN', name: 'Gujarati', release: 'પ્રકાશન તારીખ', platform: 'પ્લેટફોર્મ', earning: 'કુલ સંગ્રહ', rating: 'રેટિંગ', story: 'આખી વાર્તા' },
-            { code: 'es-ES', name: 'Spanish', release: 'Fecha', platform: 'Plataforma', earning: 'Recaudación', rating: 'Clasificación', story: 'Historia' },
-            { code: 'fr-FR', name: 'French', release: 'Date', platform: 'Plateforme', earning: 'Recettes', rating: 'Note', story: 'Histoire' },
-            { code: 'de-DE', name: 'German', release: 'Datum', platform: 'Plattform', earning: 'Einnahmen', rating: 'Bewertung', story: 'Vollständige Geschichte' },
-            { code: 'it-IT', name: 'Italian', release: 'Data', platform: 'Piattaforma', earning: 'Incassi', rating: 'Voto', story: 'Storia completa' },
-            { code: 'pt-BR', name: 'Portuguese', release: 'Data', platform: 'Plataforma', earning: 'Arrecadação', rating: 'Avaliação', story: 'Historia' },
-            { code: 'ru-RU', name: 'Russian', release: 'Дата', platform: 'Платформа', earning: 'Сборы', rating: 'Рейтинг', story: 'Полная история' },
-            { code: 'ja-JP', name: 'Japanese', release: '発売日', platform: 'プラットフォーム', earning: '興行収入', rating: '評価', story: 'フルストーリー' },
-            { code: 'ko-KR', name: 'Korean', release: '출시일', platform: '플랫폼', earning: '총 수입', rating: '평점', story: '전체 이야기' },
-            { code: 'zh-CN', name: 'Chinese', release: '日期', platform: '平台', earning: '总票房', rating: '评分', story: '完整故事' },
-            { code: 'ar-SA', name: 'Arabic', release: 'تاريخ', platform: 'المنصة', earning: 'الأرباح', rating: 'تقييم', story: 'القصة الكاملة' }
+            { code: 'te-IN', name: 'Telugu', release: 'విడుదల తేదీ', earning: 'మొత్తం సేకరణ', rating: 'రేటింగ్', story: 'పూర్తి కథ' },
+            { code: 'ta-IN', name: 'Tamil', release: 'வெளியீட்டு தேதி', earning: 'மொத்த வசூல்', rating: 'மதிப்பீடு', story: 'முழு கதை' },
+            { code: 'pa-IN', name: 'Punjabi', release: 'ਰਿਲੀਜ਼ ਤਾਰੀਖ', earning: 'ਕੁੱਲ ਕਮਾਈ', rating: 'ਰੇਟਿੰਗ', story: 'ਪੂਰੀ ਕਹਾਣੀ' }
         ];
 
         window.shareMovie = function(id, title, platform) {
             const url = `https://u-tv-review.pages.dev/?m=${id}`;
             const text = `Check out the review of ${title} on U-TV REVIEW: `;
-            if(platform === 'whatsapp') {
-                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-            } else if(platform === 'telegram') {
-                window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-            }
+            if(platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
+            else if(platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
         };
 
         window.showLegal = function(type) {
             const modal = document.getElementById('movieModal');
             modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            
-            if(type === 'disclaimer') {
-                document.getElementById('modalContent').innerHTML = `
-                    <div class="p-6 md:p-12">
-                        <h2 class="text-3xl font-black text-orange-500 mb-6 underline italic">OFFICIAL SITE DISCLAIMER</h2>
-                        <div class="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed text-justify">
-                            <p><strong>U-TV REVIEW</strong> is strictly an online platform developed for informational, analytical, and educational purposes. WE DO NOT HOST OR PROVIDE DOWNLOAD LINKS.</p>
-                        </div>
-                        <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-orange-600 rounded-xl font-bold uppercase">I Understand</button>
-                    </div>`;
-            }
+            document.getElementById('modalContent').innerHTML = `
+                <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
+                    <h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">LEGAL NOTICE</h2>
+                    <p class="text-zinc-400 text-sm mb-6">U-TV REVIEW does not host content. We provide analytical reviews for fans.</p>
+                    <button onclick="closeModal()" class="btn-red px-8 py-3 rounded-lg font-bold">CLOSE</button>
+                </div>`;
         };
 
         async function loadDailyAutoPosts() {
@@ -161,13 +149,12 @@
                 const res = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=hi-IN`);
                 const data = await res.json();
                 document.getElementById('dailyGrid').innerHTML = data.results.slice(0, 5).map(movie => `
-                    <div class="relative group cursor-pointer" onclick="showDetail(${movie.id})">
-                        <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-64 object-cover rounded-2xl border border-white/10 group-hover:border-orange-500 transition-all">
-                        <div class="mt-2 text-sm font-bold line-clamp-1">${movie.title || movie.name}</div>
+                    <div class="movie-card-premium rounded-2xl p-2 cursor-pointer" onclick="showDetail(${movie.id})">
+                        <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-60 object-cover rounded-xl mb-2">
+                        <div class="text-[10px] font-bold truncate text-center uppercase">${movie.title}</div>
                     </div>`).join('');
-                
                 if(movieID) fetchFullDetails(movieID, 'hi-IN');
-            } catch (e) { console.log("Daily Picks Error"); }
+            } catch (e) { console.log("Init Error"); }
         }
 
         async function loadContent(append = false) {
@@ -175,27 +162,24 @@
             isLoading = true;
             document.getElementById('loader').classList.remove('hidden');
             if (!append) { document.getElementById('mainContent').innerHTML = ''; currentPage = 1; }
-            let endpoint = '/trending/all/week';
-            if (currentFilter === 'top250') endpoint = '/movie/top_rated';
-            else if (currentFilter === 'popular') endpoint = '/movie/popular';
-            const url = `https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`;
+            let endpoint = currentFilter === 'top250' ? '/movie/top_rated' : (currentFilter === 'popular' ? '/movie/popular' : '/trending/all/week');
             try {
-                const res = await fetch(url);
+                const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`);
                 const json = await res.json();
                 document.getElementById('mainContent').innerHTML += json.results.map(movie => `
-                    <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer relative group">
-                        <div onclick="showDetail(${movie.id})">
-                            <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" loading="lazy" class="w-full h-72 object-cover rounded-2xl mb-4">
-                            <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
-                            <div class="text-orange-400 font-black mb-10">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
+                    <div class="movie-card-premium rounded-2xl p-3 relative group">
+                        <div onclick="showDetail(${movie.id})" class="cursor-pointer">
+                            <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" class="w-full h-72 object-cover rounded-xl mb-3">
+                            <h3 class="font-bold text-sm mb-1 truncate">${movie.title || movie.name}</h3>
+                            <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
                         </div>
-                        <div class="absolute bottom-4 left-4 right-4 flex gap-2">
-                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-xs font-bold transition-all"><i class="fab fa-whatsapp"></i> Share</button>
-                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-xs font-bold transition-all"><i class="fab fa-telegram"></i> Share</button>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i></button>
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i></button>
                         </div>
                     </div>`).join('');
                 currentPage++;
-            } catch (e) { console.error("Load error"); }
+            } catch (e) { }
             isLoading = false;
             document.getElementById('loader').classList.add('hidden');
         }
@@ -206,12 +190,12 @@
             document.body.style.overflow = 'hidden';
             window.history.pushState({}, '', '?m=' + id);
             document.getElementById('modalContent').innerHTML = `
-                <div class="p-8 text-center">
-                    <h2 class="text-3xl font-black text-orange-500 mb-6 underline italic uppercase">Select Language</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                        ${languages.map(lang => `<button onclick="fetchFullDetails(${id}, '${lang.code}')" class="p-4 bg-gray-800 hover:bg-orange-600 rounded-2xl font-bold border border-gray-700 transition-all text-xs md:text-sm uppercase">${lang.name}</button>`).join('')}
+                <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 text-center">
+                    <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 uppercase">Choose Analysis Language</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        ${languages.map(lang => `<button onclick="fetchFullDetails(${id}, '${lang.code}')" class="p-3 bg-zinc-800 hover:bg-[var(--utv-red)] rounded-xl font-bold border border-zinc-700 transition-all text-xs uppercase">${lang.name}</button>`).join('')}
                     </div>
-                    <button onclick="closeModal()" class="mt-8 text-gray-400 font-bold hover:text-white">[ CLOSE ]</button>
+                    <button onclick="closeModal()" class="mt-8 text-zinc-500 font-bold hover:text-white uppercase text-xs">Close</button>
                 </div>`;
         };
 
@@ -222,38 +206,39 @@
         };
 
         window.fetchFullDetails = async function(id, langCode) {
-            document.getElementById('modalContent').innerHTML = `<div class="p-20 text-center"><div class="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto"></div></div>`;
+            document.getElementById('modalContent').innerHTML = `<div class="p-20 text-center"><div class="w-12 h-12 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin mx-auto"></div></div>`;
             const L = languages.find(l => l.code === langCode) || languages[0];
             try {
-                let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
-                if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}&append_to_response=translations`);
+                let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
+                if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
                 let movie = await res.json();
                 
-                let baseStory = movie.overview || (movie.translations?.translations?.find(t => t.iso_639_1 === 'en')?.data?.overview) || "Analysis pending.";
+                let baseStory = movie.overview || "Deep analysis in progress.";
                 let longStory = "";
                 while(longStory.split(' ').length < 1300) { longStory += baseStory + " <br><br> "; }
                 
-                document.getElementById('movieModal').classList.remove('hidden');
                 document.getElementById('modalContent').innerHTML = `
-                    <div class="p-4 md:p-10">
-                        <div class="flex justify-between items-center mb-8">
-                            <h2 class="text-xl md:text-4xl font-black text-orange-500 uppercase">${movie.title || movie.name}</h2>
-                            <button onclick="closeModal()" class="text-3xl hover:text-orange-500">&times;</button>
-                        </div>
-                        <div class="grid lg:grid-cols-2 gap-10">
-                            <div><img src="${IMG_BASE + movie.poster_path}" class="rounded-3xl w-full border-2 border-orange-500/20 shadow-2xl"></div>
-                            <div class="space-y-4">
-                                <div class="bg-white/5 p-6 rounded-3xl border border-white/10 grid grid-cols-2 gap-4 text-center">
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.release}</p><p class="font-bold text-sm">${movie.release_date || movie.first_air_date}</p></div>
-                                    <div><p class="text-xs text-gray-400 uppercase">${L.rating}</p><p class="font-bold text-orange-500 text-sm">⭐ ${movie.vote_average.toFixed(1)}</p></div>
-                                </div>
-                                <div class="bg-orange-500/5 p-6 rounded-3xl border border-orange-500/10 max-h-[400px] overflow-y-auto no-scrollbar">
-                                    <h3 class="font-black text-orange-400 mb-4 uppercase">📖 ${L.story}</h3>
-                                    <p class="text-gray-300 text-sm md:text-base leading-relaxed text-justify italic">${longStory}</p>
-                                </div>
-                                <div class="flex gap-4">
-                                    <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold uppercase"><i class="fab fa-whatsapp mr-2"></i> WhatsApp</button>
-                                    <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-500 rounded-xl font-bold uppercase"><i class="fab fa-telegram mr-2"></i> Telegram</button>
+                    <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+                        <div class="p-6 md:p-10">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl md:text-3xl font-black text-[var(--utv-red)] uppercase">${movie.title || movie.name}</h2>
+                                <button onclick="closeModal()" class="text-3xl hover:text-[var(--utv-red)]">&times;</button>
+                            </div>
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <img src="${IMG_BASE + movie.poster_path}" class="rounded-2xl border border-zinc-700 shadow-2xl w-full">
+                                <div class="space-y-4">
+                                    <div class="bg-black/50 p-6 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-4 text-center">
+                                        <div><p class="text-[10px] text-zinc-500 uppercase">${L.release}</p><p class="font-bold text-sm">${movie.release_date || movie.first_air_date}</p></div>
+                                        <div><p class="text-[10px] text-zinc-500 uppercase">${L.rating}</p><p class="font-black text-[var(--utv-red)]">⭐ ${movie.vote_average.toFixed(1)}</p></div>
+                                    </div>
+                                    <div class="bg-black p-6 rounded-2xl border border-zinc-800 max-h-[350px] overflow-y-auto no-scrollbar">
+                                        <h3 class="font-bold text-[var(--utv-red)] mb-4 uppercase text-xs">Analysis Details</h3>
+                                        <p class="text-zinc-400 text-sm leading-relaxed text-justify italic">${longStory}</p>
+                                    </div>
+                                    <div class="flex gap-4">
+                                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold text-xs uppercase">Share WhatsApp</button>
+                                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-600 rounded-xl font-bold text-xs uppercase">Share Telegram</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -268,11 +253,9 @@
             fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
                 .then(r => r.json()).then(json => {
                     document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
-                        <div class="bg-gray-800/40 border border-gray-700 rounded-3xl p-4 hover:border-orange-500 transition-all cursor-pointer relative group">
-                            <div onclick="showDetail(${movie.id})">
-                                <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-2xl mb-4">
-                                <h3 class="font-bold text-lg mb-2 line-clamp-1">${movie.title || movie.name}</h3>
-                            </div>
+                        <div class="movie-card-premium rounded-2xl p-3" onclick="showDetail(${movie.id})">
+                            <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-xl mb-3">
+                            <h3 class="font-bold text-sm truncate">${movie.title || movie.name}</h3>
                         </div>`).join('');
                 });
         });
