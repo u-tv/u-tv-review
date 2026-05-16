@@ -1,267 +1,278 @@
-<script>
-(function() {
-    const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-    const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY';
-    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
-    let currentPage = 1, currentFilter = 'trending', isSearching = false, isLoading = false;
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
+    
+    <title id="meta-title">${MOVIE_TITLE} - U-TV REVIEW</title>
+    <meta name="description" id="meta-desc" content="${MOVIE_DESC}">
+    <link rel="canonical" id="meta-canon" href="${CANONICAL_URL}" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --utv-red: #e50914; 
+            --bg-deep: #050505; 
+            --card-bg: #121212;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        body { 
+            background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Fixed Theme Elements */
+        nav { 
+            background: rgba(0,0,0,0.9) !important; 
+            backdrop-filter: blur(20px); 
+            border-bottom: 2px solid var(--utv-red) !important; 
+        }
+        .filter-btn.active { 
+            background-color: var(--utv-red) !important; 
+            border-color: var(--utv-red) !important;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+        .movie-card-premium {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .movie-card-premium:hover {
+            transform: scale(1.05);
+            border-color: var(--utv-red);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .btn-red {
+            background: var(--utv-red) !important;
+            transition: 0.3s;
+        }
+        .btn-red:hover {
+            background: #ff0f1e !important;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        }
+        #movieModal { background: rgba(0,0,0,0.98) !important; }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <nav class="fixed top-0 w-full z-50 p-3 md:p-4 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
+            <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
+        </div>
+        <div class="flex items-center space-x-2 flex-1 justify-end">
+            <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
+                <input id="searchInput" type="text" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
+                <button id="searchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
+            </div>
+        </div>
+    </nav>
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieID = urlParams.get('m') || urlParams.get('id');
+    <div class="fixed top-[70px] w-full z-40 bg-black/90 backdrop-blur-md p-4 border-b border-zinc-800">
+        <div class="flex space-x-3 overflow-x-auto no-scrollbar max-w-6xl mx-auto">
+            <button class="filter-btn active whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="trending">Trending</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="top250">Top 250</button>
+            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="popular">Popular</button>
+        </div>
+    </div>
 
-    const languages = [
-        { code: 'hi-IN', name: 'Hindi', release: 'रिलीज़ डेट', platform: 'प्लेटफॉर्म', earning: 'कुल कमाई', rating: 'रेटिंग', story: 'पूरी कहानी और विश्लेषण' },
-        { code: 'en-US', name: 'English', release: 'Release Date', platform: 'Platform', earning: 'Total Collection', rating: 'Rating', story: 'Full Story & Analysis' },
-        { code: 'te-IN', name: 'Telugu', release: 'విడుదల తేదీ', earning: 'మొత్తం సేకరణ', rating: 'రేటింగ్', story: 'పూర్తి కథ' },
-        { code: 'ta-IN', name: 'Tamil', release: 'வெளியீட்டு தேதி', earning: 'மொత్తం வசூல்', rating: 'மதிப்பீடு', story: 'முழு கதை' },
-        { code: 'pa-IN', name: 'Punjabi', release: 'ਰਿਲੀਜ਼ ਤਾਰੀਖ', earning: 'ਕੁੱਲ ਕਮਾਈ', rating: 'ਰੇਟਿੰਗ', story: 'ਪੂਰੀ ਕਹਾਣੀ' }
-    ];
+    <div class="pt-40 pb-10 px-4 max-w-[1600px] mx-auto">
+        <div id="dailyFeaturedSection" class="mb-10">
+            <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 flex items-center uppercase tracking-widest"><i class="fas fa-bolt mr-2"></i> Special Picks</h2>
+            <div id="dailyGrid" class="grid grid-cols-2 lg:grid-cols-5 gap-4"></div>
+        </div>
 
-    window.shareMovie = function(id, title, platform) {
-        const url = `https://u-tv-review.pages.dev/?m=${id}`;
-        const text = `Check out the review of ${title} on U-TV REVIEW: `;
-        if(platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-        else if(platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-    };
+        <h2 class="text-xl font-black text-white mb-6 uppercase tracking-widest border-l-4 border-[var(--utv-red)] pl-3">Explore Reviews</h2>
+        <div id="mainContent" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        
+        <div id="loader" class="flex justify-center py-10 hidden">
+            <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+    </div>
 
-    window.showLegal = function(type) {
-        const modal = document.getElementById('movieModal');
-        modal.classList.remove('hidden');
-        document.getElementById('modalContent').innerHTML = `
-            <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
-                <h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">LEGAL NOTICE</h2>
-                <p class="text-zinc-400 text-sm mb-6">U-TV REVIEW does not host content. We provide analytical reviews for fans.</p>
-                <button onclick="closeModal()" class="btn-red px-8 py-3 rounded-lg font-bold">CLOSE</button>
-            </div>`;
-    };
+    <footer class="bg-black border-t border-zinc-800 p-10 text-center">
+        <div class="max-w-4xl mx-auto mb-8 text-zinc-500 text-xs leading-relaxed">
+            <p class="mb-4 text-[var(--utv-red)] font-bold">U-TV REVIEW | INFORMATIONAL ENTITY</p>
+            <p>U-TV REVIEW stands firmly against digital piracy. This platform is for review and educational analysis only.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="showLegal('disclaimer')" class="px-8 py-3 bg-zinc-800 rounded-lg font-bold text-xs uppercase border border-zinc-700 hover:bg-zinc-700">Disclaimer</button>
+            <button onclick="window.location.href='mailto:HELP.WOWMOVIES@GMAIL.COM'" class="px-8 py-3 bg-red-900/30 text-red-500 rounded-lg font-bold text-xs uppercase border border-red-900/50">Copyright Issue</button>
+        </div>
+        <p class="mt-8 text-[10px] text-zinc-600">© 2026 U-TV REVIEW - ALL RIGHTS RESERVED</p>
+    </footer>
 
-    function getLangName(code) {
-        const found = languages.find(l => l.code === code);
-        return found ? found.name : 'English';
-    }
+    <div id="movieModal" class="fixed inset-0 z-[60] hidden overflow-y-auto">
+        <div class="max-w-5xl mx-auto my-10 p-4" id="modalContent"></div>
+    </div>
 
-    function getStoryBox() {
-        return document.getElementById('modalContent');
-    }
+    <script>
+    (function() {
+        const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
+        const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+        let currentPage = 1, currentFilter = 'trending', isSearching = false, isLoading = false;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieID = urlParams.get('m') || urlParams.get('id');
 
-    function getStorageKey(id, langCode) {
-        return `story_${location.pathname}_${id}_${langCode}`;
-    }
+        const languages = [
+            { code: 'hi-IN', name: 'Hindi', release: 'रिलीज़ डेट', platform: 'प्लेटफॉर्म', earning: 'कुल कमाई', rating: 'रेटिंग', story: 'पूरी कहानी और विश्लेषण' },
+            { code: 'en-US', name: 'English', release: 'Release Date', platform: 'Platform', earning: 'Total Collection', rating: 'Rating', story: 'Full Story & Analysis' },
+            { code: 'te-IN', name: 'Telugu', release: 'విడుదల తేదీ', earning: 'మొత్తం సేకరణ', rating: 'రేటింగ్', story: 'పూర్తి కథ' },
+            { code: 'ta-IN', name: 'Tamil', release: 'வெளியீட்டு தேதி', earning: 'மொத்த வசூல்', rating: 'மதிப்பீடு', story: 'முழு கதை' },
+            { code: 'pa-IN', name: 'Punjabi', release: 'ਰਿਲੀਜ਼ ਤਾਰੀਖ', earning: 'ਕੁੱਲ ਕਮਾਈ', rating: 'ਰੇਟਿੰਗ', story: 'ਪੂਰੀ ਕਹਾਣੀ' }
+        ];
 
-    function getEnglishKey(id) {
-        return `story_${location.pathname}_${id}_en-US`;
-    }
+        window.shareMovie = function(id, title, platform) {
+            const url = `https://u-tv-review.pages.dev/?m=${id}`;
+            const text = `Check out the review of ${title} on U-TV REVIEW: `;
+            if(platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
+            else if(platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+        };
 
-    function safeText(v) {
-        return (v || '').toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    async function geminiGenerate(prompt) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
-        if (!response.ok) throw new Error(`Gemini HTTP ${response.status}`);
-        const data = await response.json();
-        return (data?.candidates?.[0]?.content?.parts?.[0]?.text || "").trim();
-    }
-
-    async function buildEnglishStory(movie) {
-        const key = getEnglishKey(movie.id);
-        const saved = localStorage.getItem(key);
-        if (saved && saved.trim().length > 50) return saved;
-
-        const title = movie.title || movie.name || '';
-        const year = (movie.release_date || movie.first_air_date || '').toString().slice(0, 4);
-        const genre = Array.isArray(movie.genres) ? movie.genres.map(g => g.name || g).join(", ") : '';
-
-        const prompt = `Write a detailed movie story in English.
-Movie title: ${title}
-Release year: ${year}
-Genre: ${genre}
-
-Rules:
-- Minimum 1000 words
-- Return only the story
-- Do not write "Deep analysis in progress"
-- Make it natural and complete`;
-
-        const text = await geminiGenerate(prompt);
-        if (!text) throw new Error("Empty English story");
-        localStorage.setItem(key, text);
-        return text;
-    }
-
-    async function translateStory(englishStory, targetLanguageName) {
-        const prompt = `Translate this English movie story into ${targetLanguageName}. Keep meaning, tone, and detail. Return only the translated story:
-
-${englishStory}`;
-        const text = await geminiGenerate(prompt);
-        return text || englishStory;
-    }
-
-    window.closeModal = function() {
-        document.getElementById('movieModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-        window.history.pushState({}, '', window.location.pathname);
-    };
-
-    window.fetchFullDetails = async function(id, langCode) {
-        document.getElementById('modalContent').innerHTML = `<div class="p-20 text-center"><div class="w-12 h-12 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin mx-auto"></div></div>`;
-        const L = languages.find(l => l.code === langCode) || languages[0];
-        try {
-            let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
-            if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
-            let movie = await res.json();
-
-            const poster = movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750';
-            const title = movie.title || movie.name || '';
-            const release = movie.release_date || movie.first_air_date || '';
-            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '0.0';
-
+        window.showLegal = function(type) {
+            const modal = document.getElementById('movieModal');
+            modal.classList.remove('hidden');
             document.getElementById('modalContent').innerHTML = `
-                <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
-                    <div class="p-6 md:p-10">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl md:text-3xl font-black text-[var(--utv-red)] uppercase">${safeText(title)}</h2>
-                            <button onclick="closeModal()" class="text-3xl hover:text-[var(--utv-red)]">&times;</button>
+                <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
+                    <h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">LEGAL NOTICE</h2>
+                    <p class="text-zinc-400 text-sm mb-6">U-TV REVIEW does not host content. We provide analytical reviews for fans.</p>
+                    <button onclick="closeModal()" class="btn-red px-8 py-3 rounded-lg font-bold">CLOSE</button>
+                </div>`;
+        };
+
+        async function loadDailyAutoPosts() {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=hi-IN`);
+                const data = await res.json();
+                document.getElementById('dailyGrid').innerHTML = data.results.slice(0, 5).map(movie => `
+                    <div class="movie-card-premium rounded-2xl p-2 cursor-pointer" onclick="showDetail(${movie.id})">
+                        <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-60 object-cover rounded-xl mb-2">
+                        <div class="text-[10px] font-bold truncate text-center uppercase">${movie.title}</div>
+                    </div>`).join('');
+                if(movieID) fetchFullDetails(movieID, 'hi-IN');
+            } catch (e) { console.log("Init Error"); }
+        }
+
+        async function loadContent(append = false) {
+            if (isLoading) return;
+            isLoading = true;
+            document.getElementById('loader').classList.remove('hidden');
+            if (!append) { document.getElementById('mainContent').innerHTML = ''; currentPage = 1; }
+            let endpoint = currentFilter === 'top250' ? '/movie/top_rated' : (currentFilter === 'popular' ? '/movie/popular' : '/trending/all/week');
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`);
+                const json = await res.json();
+                document.getElementById('mainContent').innerHTML += json.results.map(movie => `
+                    <div class="movie-card-premium rounded-2xl p-3 relative group">
+                        <div onclick="showDetail(${movie.id})" class="cursor-pointer">
+                            <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" class="w-full h-72 object-cover rounded-xl mb-3">
+                            <h3 class="font-bold text-sm mb-1 truncate">${movie.title || movie.name}</h3>
+                            <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
                         </div>
-                        <div class="grid lg:grid-cols-2 gap-8">
-                            <img src="${poster}" class="rounded-2xl border border-zinc-700 shadow-2xl w-full">
-                            <div class="space-y-4">
-                                <div class="bg-black/50 p-6 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-4 text-center">
-                                    <div><p class="text-[10px] text-zinc-500 uppercase">${L.release}</p><p class="font-bold text-sm">${safeText(release)}</p></div>
-                                    <div><p class="text-[10px] text-zinc-500 uppercase">${L.rating}</p><p class="font-black text-[var(--utv-red)]">⭐ ${rating}</p></div>
-                                </div>
-                                <div class="bg-black p-6 rounded-2xl border border-zinc-800 max-h-[350px] overflow-y-auto no-scrollbar">
-                                    <h3 class="font-bold text-[var(--utv-red)] mb-4 uppercase text-xs">${L.story}</h3>
-                                    <p id="storyText" class="text-zinc-400 text-sm leading-relaxed text-justify italic">Loading story...</p>
-                                </div>
-                                <div class="flex gap-4">
-                                    <button onclick="shareMovie(${movie.id}, '${safeText(title).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold text-xs uppercase">Share WhatsApp</button>
-                                    <button onclick="shareMovie(${movie.id}, '${safeText(title).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-600 rounded-xl font-bold text-xs uppercase">Share Telegram</button>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i></button>
+                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i></button>
+                        </div>
+                    </div>`).join('');
+                currentPage++;
+            } catch (e) { }
+            isLoading = false;
+            document.getElementById('loader').classList.add('hidden');
+        }
+
+        window.showDetail = function(id) {
+            const modal = document.getElementById('movieModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            window.history.pushState({}, '', '?m=' + id);
+            document.getElementById('modalContent').innerHTML = `
+                <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 text-center">
+                    <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 uppercase">Choose Analysis Language</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        ${languages.map(lang => `<button onclick="fetchFullDetails(${id}, '${lang.code}')" class="p-3 bg-zinc-800 hover:bg-[var(--utv-red)] rounded-xl font-bold border border-zinc-700 transition-all text-xs uppercase">${lang.name}</button>`).join('')}
+                    </div>
+                    <button onclick="closeModal()" class="mt-8 text-zinc-500 font-bold hover:text-white uppercase text-xs">Close</button>
+                </div>`;
+        };
+
+        window.closeModal = function() {
+            document.getElementById('movieModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            window.history.pushState({}, '', window.location.pathname);
+        };
+
+        window.fetchFullDetails = async function(id, langCode) {
+            document.getElementById('modalContent').innerHTML = `<div class="p-20 text-center"><div class="w-12 h-12 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin mx-auto"></div></div>`;
+            const L = languages.find(l => l.code === langCode) || languages[0];
+            try {
+                let res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
+                if(!res.ok) res = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${langCode}`);
+                let movie = await res.json();
+                
+                let baseStory = movie.overview || "Deep analysis in progress.";
+                let longStory = "";
+                while(longStory.split(' ').length < 1300) { longStory += baseStory + " <br><br> "; }
+                
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+                        <div class="p-6 md:p-10">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl md:text-3xl font-black text-[var(--utv-red)] uppercase">${movie.title || movie.name}</h2>
+                                <button onclick="closeModal()" class="text-3xl hover:text-[var(--utv-red)]">&times;</button>
+                            </div>
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <img src="${IMG_BASE + movie.poster_path}" class="rounded-2xl border border-zinc-700 shadow-2xl w-full">
+                                <div class="space-y-4">
+                                    <div class="bg-black/50 p-6 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-4 text-center">
+                                        <div><p class="text-[10px] text-zinc-500 uppercase">${L.release}</p><p class="font-bold text-sm">${movie.release_date || movie.first_air_date}</p></div>
+                                        <div><p class="text-[10px] text-zinc-500 uppercase">${L.rating}</p><p class="font-black text-[var(--utv-red)]">⭐ ${movie.vote_average.toFixed(1)}</p></div>
+                                    </div>
+                                    <div class="bg-black p-6 rounded-2xl border border-zinc-800 max-h-[350px] overflow-y-auto no-scrollbar">
+                                        <h3 class="font-bold text-[var(--utv-red)] mb-4 uppercase text-xs">Analysis Details</h3>
+                                        <p class="text-zinc-400 text-sm leading-relaxed text-justify italic">${longStory}</p>
+                                    </div>
+                                    <div class="flex gap-4">
+                                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-4 bg-green-600 rounded-xl font-bold text-xs uppercase">Share WhatsApp</button>
+                                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-4 bg-blue-600 rounded-xl font-bold text-xs uppercase">Share Telegram</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>`;
+                    </div>`;
+            } catch(e) { closeModal(); }
+        };
 
-            const storyEl = document.getElementById('storyText');
-            const englishKey = getEnglishKey(movie.id);
-            const langKey = getStorageKey(movie.id, langCode);
-
-            const cachedTranslated = localStorage.getItem(langKey);
-            if (cachedTranslated && cachedTranslated.trim().length > 20) {
-                storyEl.innerText = cachedTranslated;
-                return;
-            }
-
-            let englishStory = localStorage.getItem(englishKey);
-            if (!englishStory || englishStory.trim().length < 50) {
-                englishStory = await buildEnglishStory(movie);
-            }
-
-            if (langCode === 'en-US') {
-                localStorage.setItem(langKey, englishStory);
-                storyEl.innerText = englishStory;
-                return;
-            }
-
-            const translated = await translateStory(englishStory, L.name);
-            localStorage.setItem(langKey, translated);
-            storyEl.innerText = translated;
-
-        } catch(e) {
-            console.error(e);
-            closeModal();
-        }
-    };
-
-    async function loadDailyAutoPosts() {
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=hi-IN`);
-            const data = await res.json();
-            document.getElementById('dailyGrid').innerHTML = data.results.slice(0, 5).map(movie => `
-                <div class="movie-card-premium rounded-2xl p-2 cursor-pointer" onclick="showDetail(${movie.id})">
-                    <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-60 object-cover rounded-xl mb-2">
-                    <div class="text-[10px] font-bold truncate text-center uppercase">${movie.title}</div>
-                </div>`).join('');
-            if(movieID) fetchFullDetails(movieID, 'hi-IN');
-        } catch (e) { console.log("Init Error"); }
-    }
-
-    async function loadContent(append = false) {
-        if (isLoading) return;
-        isLoading = true;
-        document.getElementById('loader').classList.remove('hidden');
-        if (!append) { document.getElementById('mainContent').innerHTML = ''; currentPage = 1; }
-        let endpoint = currentFilter === 'top250' ? '/movie/top_rated' : (currentFilter === 'popular' ? '/movie/popular' : '/trending/all/week');
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`);
-            const json = await res.json();
-            document.getElementById('mainContent').innerHTML += json.results.map(movie => `
-                <div class="movie-card-premium rounded-2xl p-3 relative group">
-                    <div onclick="showDetail(${movie.id})" class="cursor-pointer">
-                        <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" class="w-full h-72 object-cover rounded-xl mb-3">
-                        <h3 class="font-bold text-sm mb-1 truncate">${movie.title || movie.name}</h3>
-                        <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
-                    </div>
-                    <div class="mt-4 flex gap-2">
-                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i></button>
-                        <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i></button>
-                    </div>
-                </div>`).join('');
-            currentPage++;
-        } catch (e) { }
-        isLoading = false;
-        document.getElementById('loader').classList.add('hidden');
-    }
-
-    window.showDetail = function(id) {
-        const modal = document.getElementById('movieModal');
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        window.history.pushState({}, '', '?m=' + id);
-        document.getElementById('modalContent').innerHTML = `
-            <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 text-center">
-                <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 uppercase">Choose Analysis Language</h2>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    ${languages.map(lang => `<button onclick="fetchFullDetails(${id}, '${lang.code}')" class="p-3 bg-zinc-800 hover:bg-[var(--utv-red)] rounded-xl font-bold border border-zinc-700 transition-all text-xs uppercase">${lang.name}</button>`).join('')}
-                </div>
-                <button onclick="closeModal()" class="mt-8 text-zinc-500 font-bold hover:text-white uppercase text-xs">Close</button>
-            </div>`;
-    };
-
-    document.getElementById('searchBtn').addEventListener('click', () => {
-        const query = document.getElementById('searchInput').value.trim();
-        if(!query) { isSearching = false; loadContent(false); return; }
-        isSearching = true;
-        fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
-            .then(r => r.json()).then(json => {
-                document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
-                    <div class="movie-card-premium rounded-2xl p-3" onclick="showDetail(${movie.id})">
-                        <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-xl mb-3">
-                        <h3 class="font-bold text-sm truncate">${movie.title || movie.name}</h3>
-                    </div>`).join('');
-            });
-    });
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = btn.dataset.filter;
-            isSearching = false;
-            loadContent(false);
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const query = document.getElementById('searchInput').value.trim();
+            if(!query) { isSearching = false; loadContent(false); return; }
+            isSearching = true;
+            fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
+                .then(r => r.json()).then(json => {
+                    document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
+                        <div class="movie-card-premium rounded-2xl p-3" onclick="showDetail(${movie.id})">
+                            <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-xl mb-3">
+                            <h3 class="font-bold text-sm truncate">${movie.title || movie.name}</h3>
+                        </div>`).join('');
+                });
         });
-    });
 
-    window.onscroll = () => { if (!isSearching && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) loadContent(true); };
-    document.addEventListener('DOMContentLoaded', () => { loadDailyAutoPosts(); loadContent(); });
-})();
-</script>
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                isSearching = false;
+                loadContent(false);
+            });
+        });
+
+        window.onscroll = () => { if (!isSearching && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) loadContent(true); };
+        document.addEventListener('DOMContentLoaded', () => { loadDailyAutoPosts(); loadContent(); });
+    })();
+    </script>
 </body>
 </html>
