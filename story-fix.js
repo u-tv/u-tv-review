@@ -1,82 +1,126 @@
 <script type="module">
-import { GoogleGenAI } from "https://esm.run/@google/genai";
-
 const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-const LANGS = {
-  en: "English",
-  hi: "Hindi",
-  pa: "Punjabi",
-  ta: "Tamil",
-  te: "Telugu"
+const LANG_MAP = {
+  english: "en-US",
+  hindi: "hi-IN",
+  punjabi: "pa-IN",
+  tamil: "ta-IN",
+  telugu: "te-IN",
+  en: "en-US",
+  hi: "hi-IN",
+  pa: "pa-IN",
+  ta: "ta-IN",
+  te: "te-IN"
 };
 
-function normLang(x) {
-  x = (x || "").toString().toLowerCase().trim();
-  if (x === "english") return "en";
-  if (x === "hindi") return "hi";
-  if (x === "punjabi") return "pa";
-  if (x === "tamil") return "ta";
-  if (x === "telugu") return "te";
-  return LANGS[x] ? x : "en";
+function normalizeLang(lang) {
+  return LANG_MAP[(lang || "").toString().toLowerCase().trim()] || "en-US";
 }
 
-function cacheKey(movieId, lang) {
-  return `movie_story_${movieId}_${lang}`;
+function getBox() {
+  return document.getElementById("story-box") || document.getElementById("storyBox");
 }
 
-async function storyFix(movie, lang) {
-  const lc = normLang(lang);
-  const movieId = movie?.id || movie?.movie_id || movie?.tmdb_id || "";
-  const title = movie?.title || movie?.name || "";
-  const year = movie?.year || movie?.release_date || "";
-  const genre = Array.isArray(movie?.genres) ? movie.genres.join(", ") : (movie?.genre || "");
+function getMovieId(movieData) {
+  return movieData?.id || movieData?.movie_id || movieData?.tmdb_id || movieData?.movieId || "";
+}
 
-  const box = document.getElementById("storyBox");
+function getEnglishStory(movieData) {
+  return (
+    movieData?.overviews?.en ||
+    movieData?.overviews?.["en-US"] ||
+    movieData?.overview ||
+    movieData?.englishStory ||
+    ""
+  );
+}
+
+function getTargetStory(movieData, targetLanguage) {
+  if (!movieData || !movieData.overviews) return "";
+  return (
+    movieData.overviews[targetLanguage] ||
+    movieData.overviews[normalizeLang(targetLanguage)] ||
+    movieData.overviews[targetLanguage?.toLowerCase?.()] ||
+    ""
+  );
+}
+
+function cacheKey(movieData, lang) {
+  return `story_${location.pathname}_${getMovieId(movieData)}_${lang}`;
+}
+
+async function callGeminiTranslate(text, targetLanguage) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const prompt = `Translate this movie overview into professional and engaging ${targetLanguage}. Keep the original meaning and movie tone intact. Return only the translated story. Text: "${text}"`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [{ text: prompt }]
+        }
+      ]
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gemini HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return out.trim();
+}
+
+window.handleLanguageClick = async function(targetLanguage, movieData) {
+  const box = getBox();
   if (!box) return;
 
-  const saved = localStorage.getItem(cacheKey(movieId, lc));
-  if (saved && saved.length > 300) {
-    box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.8">${saved}</div>`;
+  const langCode = normalizeLang(targetLanguage);
+  const movieId = getMovieId(movieData);
+  const key = cacheKey(movieData, langCode);
+
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY") {
+    box.innerText = "Gemini API key missing.";
     return;
   }
 
-  box.innerHTML = "Loading story...";
+  const cached = localStorage.getItem(key);
+  if (cached && cached.trim().length > 10) {
+    box.innerText = cached;
+    return;
+  }
 
-  try {
-    const prompt = `
-Write a very detailed movie story in ${LANGS[lc]}.
-Movie title: ${title}
-Release year: ${year}
-Genre: ${genre}
+  let currentStory = getTargetStory(movieData, targetLanguage);
 
-Rules:
-- Use only ${LANGS[lc]}.
-- Minimum 1000 words.
-- Do not write "Deep analysis in progress".
-- Do not write blank lines only.
-- Make it natural, complete, and user-friendly.
-`;
+  if (!currentStory || !currentStory.trim()) {
+    const englishStory = getEnglishStory(movieData);
 
-    const res = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt
-    });
-
-    const text = (res.text || "").trim();
-
-    if (!text) {
-      box.innerHTML = `<p>No story available.</p>`;
+    if (!englishStory.trim()) {
+      box.innerText = "English story bhi nahi mili.";
       return;
     }
 
-    localStorage.setItem(cacheKey(movieId, lc), text);
-    box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.8">${text}</div>`;
-  } catch (e) {
-    box.innerHTML = `<p>Story load failed.</p>`;
-  }
-}
+    box.innerText = `Loading story in ${targetLanguage}...`;
 
-window.storyFix = storyFix;
+    try {
+      currentStory = await callGeminiTranslate(englishStory, targetLanguage);
+
+      if (!currentStory) {
+        currentStory = englishStory;
+      }
+
+      localStorage.setItem(key, currentStory);
+    } catch (error) {
+      console.error("Gemini Error:", error);
+      currentStory = englishStory;
+      localStorage.setItem(key, currentStory);
+    }
+  }
+
+  box.innerText = currentStory;
+};
 </script>
