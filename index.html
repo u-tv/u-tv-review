@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
   <title>U-TV REVIEW – Movie Analysis, Reviews & Ratings</title>
   <meta name="description" content="In-depth movie reviews, ratings, cast, box office analysis. Latest from Bollywood, Hollywood, South, and Web Series.">
-  <meta name="keywords" content="movie reviews, analysis, bollywood, hollywood, south indian, web series, ratings">
   <link rel="canonical" href="https://u-tv-review.pages.dev/">
   <link rel="sitemap" href="/sitemap.xml">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,97 +19,133 @@
     body {
       background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
       color: white;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    /* 3D Button Styles */
-    .btn-3d {
-      display: inline-block;
+    /* Modern button styles – no awkward 3D, clean & touch-friendly */
+    .category-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding: 8px 4px 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .category-scroll::-webkit-scrollbar {
+      height: 3px;
+    }
+    .cat-btn {
+      flex: 0 0 auto;
       padding: 10px 20px;
       border-radius: 40px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: 0.2s;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.3);
-      transform: translateY(-2px);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.3px;
+      background: rgba(20,20,30,0.9);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      transition: all 0.2s ease;
       cursor: pointer;
+      white-space: nowrap;
     }
-    .btn-3d:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    .cat-btn i {
+      margin-right: 6px;
+      font-size: 0.9rem;
     }
-    .btn-trending { background: linear-gradient(135deg, #f857a6, #ff5858); color: white; }
-    .btn-blockbuster { background: linear-gradient(135deg, #f2994a, #f2c94c); color: black; }
-    .btn-hollywood { background: linear-gradient(135deg, #4facfe, #00f2fe); color: black; }
-    .btn-bollywood { background: linear-gradient(135deg, #43e97b, #38f9d7); color: black; }
-    .btn-south { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: black; }
-    .btn-top250 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); color: black; }
+    .cat-btn:active {
+      transform: scale(0.96);
+    }
+    /* Individual button colors on hover/active (subtle) */
+    .cat-btn[data-section="trending"]:hover { background: #f857a6; border-color: #f857a6; color: white; }
+    .cat-btn[data-section="blockbuster"]:hover { background: #f2994a; border-color: #f2994a; color: black; }
+    .cat-btn[data-section="hollywood"]:hover { background: #4facfe; border-color: #4facfe; color: black; }
+    .cat-btn[data-section="bollywood"]:hover { background: #43e97b; border-color: #43e97b; color: black; }
+    .cat-btn[data-section="south"]:hover { background: #a18cd1; border-color: #a18cd1; color: black; }
+    .cat-btn[data-section="top250"]:hover { background: #ff9a9e; border-color: #ff9a9e; color: black; }
 
     .movie-card-premium {
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.05);
-      transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
     }
     .movie-card-premium:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-4px);
       border-color: var(--utv-red);
-      box-shadow: 0 20px 30px -10px rgba(229,9,20,0.3);
+      box-shadow: 0 15px 25px -12px rgba(229,9,20,0.25);
     }
     .section-title {
-      font-size: 1.5rem;
-      font-weight: 800;
+      font-size: 1.4rem;
+      font-weight: 700;
       border-left: 4px solid var(--utv-red);
       padding-left: 12px;
       margin: 1.5rem 0 1rem;
-      text-transform: uppercase;
+      letter-spacing: -0.3px;
     }
     .load-more-btn {
       background: #1e1f2a;
-      border: 1px solid #333;
-      padding: 8px 24px;
+      border: none;
+      padding: 8px 20px;
       border-radius: 40px;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 0.8rem;
       transition: 0.2s;
       cursor: pointer;
     }
     .load-more-btn:hover {
       background: var(--utv-red);
-      border-color: var(--utv-red);
     }
-    footer a { transition: 0.2s; }
-    footer a:hover { color: var(--utv-red); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
+    footer a {
+      transition: 0.2s;
+    }
+    footer a:hover {
+      color: var(--utv-red);
+    }
+    /* Better mobile grid */
+    @media (max-width: 640px) {
+      .grid {
+        gap: 12px;
+      }
+      .movie-card-premium .text-sm {
+        font-size: 0.7rem;
+      }
+      .cat-btn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+      }
+    }
   </style>
+  <!-- Adsterra popunder (safe) -->
   <script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 </head>
 <body class="min-h-screen">
 
   <!-- Fixed Navbar -->
-  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-[var(--utv-red)] p-3 md:p-4 flex justify-between items-center shadow-2xl">
+  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-[var(--utv-red)] p-3 md:p-4 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
       <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
     </div>
     <div class="flex items-center space-x-2 flex-1 justify-end">
       <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
-        <input id="globalSearchInput" type="text" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
+        <input id="globalSearchInput" type="search" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
         <button id="globalSearchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
       </div>
     </div>
   </nav>
 
-  <!-- 3D Colorful Buttons (Sticky) -->
-  <div class="fixed top-[72px] left-0 w-full z-40 bg-black/80 backdrop-blur-md p-3 overflow-x-auto no-scrollbar border-b border-zinc-800">
-    <div class="flex justify-center gap-3 flex-nowrap md:flex-wrap max-w-7xl mx-auto">
-      <button class="btn-3d btn-trending" data-section="trending">🔥 Today Trending</button>
-      <button class="btn-3d btn-blockbuster" data-section="blockbuster">💥 Blockbuster</button>
-      <button class="btn-3d btn-hollywood" data-section="hollywood">🇺🇸 Hollywood</button>
-      <button class="btn-3d btn-bollywood" data-section="bollywood">🇮🇳 Bollywood</button>
-      <button class="btn-3d btn-south" data-section="south">🎭 South Indian</button>
-      <button class="btn-3d btn-top250" data-section="top250">🏆 Top 250</button>
+  <!-- Category Buttons (Horizontal scroll on mobile, clean pill design) -->
+  <div class="fixed top-[70px] left-0 w-full z-40 bg-black/80 backdrop-blur-sm border-b border-zinc-800 py-2 px-3">
+    <div class="category-scroll max-w-7xl mx-auto">
+      <button class="cat-btn" data-section="trending"><i class="fas fa-fire"></i> Trending</button>
+      <button class="cat-btn" data-section="blockbuster"><i class="fas fa-bolt"></i> Blockbuster</button>
+      <button class="cat-btn" data-section="hollywood"><i class="fas fa-film"></i> Hollywood</button>
+      <button class="cat-btn" data-section="bollywood"><i class="fas fa-language"></i> Bollywood</button>
+      <button class="cat-btn" data-section="south"><i class="fas fa-mask"></i> South Indian</button>
+      <button class="cat-btn" data-section="top250"><i class="fas fa-trophy"></i> Top 250</button>
     </div>
   </div>
 
-  <div class="pt-40 pb-10 px-4 max-w-[1600px] mx-auto">
+  <!-- Main content area (add padding to avoid fixed elements overlap) -->
+  <div class="pt-44 pb-10 px-4 max-w-[1600px] mx-auto">
     <!-- Search Results Section (hidden initially) -->
     <div id="searchResultsSection" class="hidden mb-8">
       <h2 class="text-xl font-black text-[var(--utv-red)] mb-4">🔍 Search Results</h2>
@@ -118,7 +153,7 @@
       <hr class="my-8 border-zinc-800">
     </div>
 
-    <!-- Dynamic Sections Container -->
+    <!-- Dynamic Sections Container (injected by JS) -->
     <div id="sectionsContainer"></div>
 
     <div id="loadingIndicator" class="flex justify-center py-10 hidden">
@@ -131,156 +166,165 @@
     <div class="max-w-4xl mx-auto">
       <div class="flex flex-wrap justify-center gap-6 text-sm mb-6">
         <a href="#" id="dmcaLink" class="text-zinc-400 hover:text-[var(--utv-red)]">DMCA</a>
-        <a href="#" id="aboutLink" class="text-zinc-400 hover:text-[var(--utv-red)]">About Us</a>
+        <a href="#" id="aboutLink" class="text-zinc-400 hover:text-[var(--utv-red)]">About</a>
         <a href="#" id="disclaimerLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Disclaimer</a>
         <a href="#" id="securityLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Security</a>
-        <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-zinc-400 hover:text-[var(--utv-red)]">Help / Copyright</a>
+        <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-zinc-400 hover:text-[var(--utv-red)]">Help</a>
       </div>
-      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | All data from TMDB & OMDb</p>
+      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | Data from TMDB & OMDb</p>
     </div>
   </footer>
 
   <script>
-    // ========== CONFIG ==========
-    const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-    const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
+    (function() {
+      const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
+      const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
 
-    // Section definitions: id, title, API endpoint, type, page
-    const sections = [
-      { id: 'top250', title: '🏆 Top 250 Movies', endpoint: '/movie/top_rated', type: 'movie', page: 1 },
-      { id: 'trending', title: '🔥 Today Trending (Now Playing)', endpoint: '/movie/now_playing', type: 'movie', page: 1 },
-      { id: 'blockbuster', title: '💥 Blockbuster (Popular)', endpoint: '/movie/popular', type: 'movie', page: 1 },
-      { id: 'webseries', title: '📺 Trending Web Series', endpoint: '/tv/popular', type: 'tv', page: 1 },
-      { id: 'bollywood', title: '🇮🇳 Bollywood (Hindi)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'hi' } },
-      { id: 'hollywood', title: '🇺🇸 Hollywood (English)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'en' } },
-      { id: 'south', title: '🎭 South Indian Cinema', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'ta,te,ml,kn' } }
-    ];
+      const sections = [
+        { id: 'top250', title: '🏆 Top 250 Movies', endpoint: '/movie/top_rated', type: 'movie', page: 1 },
+        { id: 'trending', title: '🔥 Today Trending (Now Playing)', endpoint: '/movie/now_playing', type: 'movie', page: 1 },
+        { id: 'blockbuster', title: '💥 Blockbuster (Popular)', endpoint: '/movie/popular', type: 'movie', page: 1 },
+        { id: 'webseries', title: '📺 Trending Web Series', endpoint: '/tv/popular', type: 'tv', page: 1 },
+        { id: 'bollywood', title: '🇮🇳 Bollywood (Hindi)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'hi' } },
+        { id: 'hollywood', title: '🇺🇸 Hollywood (English)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'en' } },
+        { id: 'south', title: '🎭 South Indian Cinema', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'ta,te,ml,kn' } }
+      ];
 
-    let isLoading = false;
+      let isLoading = false;
 
-    function buildUrl(section) {
-      let url = `https://api.themoviedb.org/3${section.endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=${section.page}`;
-      if (section.params) {
-        for (let [k, v] of Object.entries(section.params)) url += `&${k}=${v}`;
+      function buildUrl(section) {
+        let url = `https://api.themoviedb.org/3${section.endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=${section.page}`;
+        if (section.params) {
+          for (let [k, v] of Object.entries(section.params)) url += `&${k}=${v}`;
+        }
+        return url;
       }
-      return url;
-    }
 
-    function renderCard(item, type) {
-      const title = item.title || item.name;
-      const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
-      const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-      const id = item.id;
-      return `
-        <div class="movie-card-premium rounded-2xl p-3 cursor-pointer transition-all" onclick="location.href='/movie/${id}/'">
-          <img src="${poster}" class="w-full h-72 object-cover rounded-xl mb-3" loading="lazy">
-          <h3 class="font-bold text-sm mb-1 truncate">${escapeHtml(title)}</h3>
-          <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${rating}</div>
-          <div class="mt-2 flex gap-2">
-            <button onclick="shareMovie(${id}, '${escapeHtml(title).replace(/'/g, "\\'")}', 'whatsapp'); event.stopPropagation();" class="flex-1 py-1 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i> Share</button>
-            <button onclick="shareMovie(${id}, '${escapeHtml(title).replace(/'/g, "\\'")}', 'telegram'); event.stopPropagation();" class="flex-1 py-1 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i> Share</button>
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+      }
+
+      function renderCard(item, type) {
+        const title = item.title || item.name;
+        const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
+        const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+        const id = item.id;
+        const safeTitle = escapeHtml(title).replace(/'/g, "\\'");
+        return `
+          <div class="movie-card-premium rounded-2xl p-3 cursor-pointer transition-all" onclick="location.href='/movie/${id}/'">
+            <img src="${poster}" class="w-full aspect-[2/3] object-cover rounded-xl mb-3" loading="lazy">
+            <h3 class="font-bold text-sm mb-1 truncate">${escapeHtml(title)}</h3>
+            <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${rating}</div>
+            <div class="mt-2 flex gap-2">
+              <button onclick="shareMovie(${id}, '${safeTitle}', 'whatsapp'); event.stopPropagation();" class="flex-1 py-1 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i> Share</button>
+              <button onclick="shareMovie(${id}, '${safeTitle}', 'telegram'); event.stopPropagation();" class="flex-1 py-1 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i> Share</button>
+            </div>
           </div>
-        </div>
-      `;
-    }
+        `;
+      }
 
-    async function loadSection(section, append = false) {
-      if (isLoading) return;
-      isLoading = true;
-      const container = document.getElementById(`section-${section.id}`);
-      const loadBtn = document.getElementById(`loadmore-${section.id}`);
-      if (!append) container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
-      try {
-        const url = buildUrl(section);
+      async function loadSection(section, append = false) {
+        if (isLoading) return;
+        isLoading = true;
+        const container = document.getElementById(`section-${section.id}`);
+        const loadBtn = document.getElementById(`loadmore-${section.id}`);
+        if (!append) container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
+        try {
+          const url = buildUrl(section);
+          const res = await fetch(url);
+          const data = await res.json();
+          let results = data.results || [];
+          if (section.type === 'tv') results = results.filter(r => r.poster_path);
+          const html = results.map(item => renderCard(item, section.type)).join('');
+          if (append) container.insertAdjacentHTML('beforeend', html);
+          else container.innerHTML = html;
+          section.page++;
+          if (section.page > data.total_pages) {
+            if (loadBtn) loadBtn.style.display = 'none';
+          } else {
+            if (loadBtn) loadBtn.style.display = 'inline-block';
+          }
+        } catch (err) {
+          console.error(err);
+          if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load. Tap to retry.</div>';
+        }
+        isLoading = false;
+      }
+
+      function buildSectionsUI() {
+        const container = document.getElementById('sectionsContainer');
+        container.innerHTML = '';
+        sections.forEach(sec => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'mb-10';
+          wrapper.id = `section-wrapper-${sec.id}`;
+          wrapper.innerHTML = `
+            <div class="flex justify-between items-center flex-wrap gap-2">
+              <h2 class="section-title text-xl md:text-2xl">${sec.title}</h2>
+              <button id="loadmore-${sec.id}" class="load-more-btn text-xs md:text-sm">Load More</button>
+            </div>
+            <div id="section-${sec.id}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 mt-4"></div>
+          `;
+          container.appendChild(wrapper);
+          document.getElementById(`loadmore-${sec.id}`).addEventListener('click', () => loadSection(sec, true));
+          loadSection(sec, false);
+        });
+      }
+
+      function scrollToSection(sectionId) {
+        const el = document.getElementById(`section-wrapper-${sectionId}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Attach button events
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.dataset.section;
+          scrollToSection(section);
+        });
+      });
+
+      // Share function (global)
+      window.shareMovie = function(id, title, platform) {
+        const url = `https://u-tv-review.pages.dev/movie/${id}/`;
+        const text = `Check out the review of "${title}" on U-TV REVIEW: `;
+        if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
+        else if (platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+      };
+
+      // Search
+      async function performSearch(query) {
+        if (!query.trim()) { document.getElementById('searchResultsSection').classList.add('hidden'); return; }
+        const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US`;
         const res = await fetch(url);
         const data = await res.json();
-        let results = data.results || [];
-        if (section.type === 'tv') results = results.filter(r => r.poster_path);
-        const html = results.map(item => renderCard(item, section.type)).join('');
-        if (append) container.insertAdjacentHTML('beforeend', html);
-        else container.innerHTML = html;
-        section.page++;
-        if (section.page > data.total_pages) { if (loadBtn) loadBtn.style.display = 'none'; }
-        else { if (loadBtn) loadBtn.style.display = 'inline-block'; }
-      } catch (err) { console.error(err); if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load.</div>'; }
-      isLoading = false;
-    }
-
-    function buildSectionsUI() {
-      const container = document.getElementById('sectionsContainer');
-      container.innerHTML = '';
-      for (let sec of sections) {
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'mb-10';
-        sectionDiv.id = `section-wrapper-${sec.id}`;
-        sectionDiv.innerHTML = `
-          <div class="flex justify-between items-center">
-            <h2 class="section-title">${sec.title}</h2>
-            <button id="loadmore-${sec.id}" class="load-more-btn text-sm">Load More</button>
-          </div>
-          <div id="section-${sec.id}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mt-4"></div>
-        `;
-        container.appendChild(sectionDiv);
-        document.getElementById(`loadmore-${sec.id}`).addEventListener('click', () => loadSection(sec, true));
-        loadSection(sec, false);
+        const results = data.results.filter(r => r.media_type === 'movie' || r.media_type === 'tv');
+        const grid = document.getElementById('searchResultsGrid');
+        if (results.length === 0) grid.innerHTML = '<div class="col-span-full text-center py-4">No results found.</div>';
+        else grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
+        document.getElementById('searchResultsSection').classList.remove('hidden');
+        document.getElementById('searchResultsSection').scrollIntoView({ behavior: 'smooth' });
       }
-    }
 
-    // Scroll to section when button clicked
-    function scrollToSection(sectionId) {
-      const element = document.getElementById(`section-wrapper-${sectionId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      function showLegalModal(title, content) {
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm';
+        modalDiv.innerHTML = `<div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl"><h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2><p class="text-zinc-300 text-sm mb-6">${content}</p><button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button></div>`;
+        document.body.appendChild(modalDiv);
+        modalDiv.querySelector('.close-modal').addEventListener('click', () => modalDiv.remove());
       }
-    }
 
-    // Attach button click handlers
-    document.querySelectorAll('[data-section]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const section = btn.dataset.section;
-        scrollToSection(section);
-      });
-    });
+      document.getElementById('dmcaLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. Data from TMDB & OMDb. Contact HELP.WOWMOVIES@GMAIL.COM for takedown.'); });
+      document.getElementById('aboutLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights.'); });
+      document.getElementById('disclaimerLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('Disclaimer', 'No video files hosted. For educational/review purposes only.'); });
+      document.getElementById('securityLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('Security', 'HTTPS only. No personal data collected.'); });
 
-    // Search functionality
-    async function performSearch(query) {
-      if (!query.trim()) { document.getElementById('searchResultsSection').classList.add('hidden'); return; }
-      const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const results = data.results.filter(r => r.media_type === 'movie' || r.media_type === 'tv');
-      const grid = document.getElementById('searchResultsGrid');
-      if (results.length === 0) grid.innerHTML = '<div class="col-span-full text-center py-4 text-zinc-400">No results found.</div>';
-      else grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
-      document.getElementById('searchResultsSection').classList.remove('hidden');
-      document.getElementById('searchResultsSection').scrollIntoView({ behavior: 'smooth' });
-    }
+      document.getElementById('globalSearchBtn').addEventListener('click', () => performSearch(document.getElementById('globalSearchInput').value));
+      document.getElementById('globalSearchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(e.target.value); });
 
-    window.shareMovie = function(id, title, platform) {
-      const url = `https://u-tv-review.pages.dev/movie/${id}/`;
-      const text = `Check out the review of "${title}" on U-TV REVIEW: `;
-      if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-      else if (platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-    };
-
-    function showLegalModal(title, content) {
-      const modalDiv = document.createElement('div');
-      modalDiv.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm';
-      modalDiv.innerHTML = `<div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl"><h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2><p class="text-zinc-300 text-sm mb-6">${content}</p><button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button></div>`;
-      document.body.appendChild(modalDiv);
-      modalDiv.querySelector('.close-modal').addEventListener('click', () => modalDiv.remove());
-    }
-
-    document.getElementById('dmcaLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. All data from TMDB & OMDb. If you believe your copyright is infringed, contact HELP.WOWMOVIES@GMAIL.COM.'); });
-    document.getElementById('aboutLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights for movies and web series.'); });
-    document.getElementById('disclaimerLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('Disclaimer', 'U-TV REVIEW does not host any video files. All information is for educational and review purposes.'); });
-    document.getElementById('securityLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected.'); });
-
-    document.getElementById('globalSearchBtn').addEventListener('click', () => performSearch(document.getElementById('globalSearchInput').value));
-    document.getElementById('globalSearchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(e.target.value); });
-
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
-    buildSectionsUI();
+      buildSectionsUI();
+    })();
   </script>
   <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
 </body>
