@@ -1,191 +1,316 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
-    <title>U-TV REVIEW – Movie Analysis, Reviews & Watch Online</title>
-    <meta name="description" content="In-depth movie reviews, ratings, cast, box office, and streaming links. Latest movies analysis.">
-    <meta name="keywords" content="movie reviews, watch movies online, U-TV REVIEW, film analysis">
-    <link rel="canonical" href="https://u-tv-review.pages.dev/">
-    <link rel="sitemap" href="/sitemap.xml">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { 
-            --utv-red: #e50914; 
-            --bg-deep: #050505; 
-            --card-bg: #121212;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        body { 
-            background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
-            color: white;
-            font-family: 'Inter', sans-serif;
-        }
-        nav { 
-            background: rgba(0,0,0,0.9) !important; 
-            backdrop-filter: blur(20px); 
-            border-bottom: 2px solid var(--utv-red) !important; 
-        }
-        .filter-btn.active { 
-            background-color: var(--utv-red) !important; 
-            border-color: var(--utv-red) !important;
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
-        }
-        .movie-card-premium {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .movie-card-premium:hover {
-            transform: scale(1.05);
-            border-color: var(--utv-red);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
-        .btn-red {
-            background: var(--utv-red) !important;
-            transition: 0.3s;
-        }
-        .btn-red:hover {
-            background: #ff0f1e !important;
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
+  <title>U-TV REVIEW – Movie Analysis, Reviews & Ratings</title>
+  <meta name="description" content="In-depth movie reviews, ratings, cast, box office analysis. Latest from Bollywood, Hollywood, South, and Web Series.">
+  <meta name="keywords" content="movie reviews, analysis, bollywood, hollywood, south indian, web series, ratings">
+  <link rel="canonical" href="https://u-tv-review.pages.dev/">
+  <link rel="sitemap" href="/sitemap.xml">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --utv-red: #e50914;
+      --bg-deep: #050505;
+      --card-bg: #121212;
+    }
+    body {
+      background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    .movie-card-premium {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .movie-card-premium:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--utv-red);
+      box-shadow: 0 20px 30px -10px rgba(229,9,20,0.3);
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      border-left: 4px solid var(--utv-red);
+      padding-left: 12px;
+      margin: 1.5rem 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+    .load-more-btn {
+      background: #1e1f2a;
+      border: 1px solid #333;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-weight: bold;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .load-more-btn:hover {
+      background: var(--utv-red);
+      border-color: var(--utv-red);
+    }
+    footer a {
+      transition: 0.2s;
+    }
+    footer a:hover {
+      color: var(--utv-red);
+    }
+    .search-highlight {
+      background: var(--utv-red);
+      color: white;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+  <!-- Adsterra popunder (safe) -->
+  <script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 </head>
 <body class="min-h-screen">
-    
-    <nav class="fixed top-0 w-full z-50 p-3 md:p-4 flex justify-between items-center shadow-2xl">
-        <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
-            <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
-        </div>
-        <div class="flex items-center space-x-2 flex-1 justify-end">
-            <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
-                <input id="searchInput" type="text" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
-                <button id="searchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
-            </div>
-        </div>
-    </nav>
 
-    <div class="fixed top-[70px] w-full z-40 bg-black/90 backdrop-blur-md p-4 border-b border-zinc-800">
-        <div class="flex space-x-3 overflow-x-auto no-scrollbar max-w-6xl mx-auto">
-            <button class="filter-btn active whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="trending">Trending</button>
-            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="top250">Top 250</button>
-            <button class="filter-btn whitespace-nowrap px-6 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-bold transition-all" data-filter="popular">Popular</button>
-        </div>
+  <!-- Fixed Navbar -->
+  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-[var(--utv-red)] p-3 md:p-4 flex justify-between items-center shadow-2xl">
+    <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
+      <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
+    </div>
+    <div class="flex items-center space-x-2 flex-1 justify-end">
+      <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
+        <input id="globalSearchInput" type="text" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
+        <button id="globalSearchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pt-24 pb-10 px-4 max-w-[1600px] mx-auto">
+    <!-- Search Results Section (hidden initially) -->
+    <div id="searchResultsSection" class="hidden mb-8">
+      <h2 class="text-xl font-black text-[var(--utv-red)] mb-4">🔍 Search Results</h2>
+      <div id="searchResultsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+      <hr class="my-8 border-zinc-800">
     </div>
 
-    <div class="pt-40 pb-10 px-4 max-w-[1600px] mx-auto">
-        <div id="dailyFeaturedSection" class="mb-10">
-            <h2 class="text-xl font-black text-[var(--utv-red)] mb-6 flex items-center uppercase tracking-widest"><i class="fas fa-bolt mr-2"></i> Special Picks</h2>
-            <div id="dailyGrid" class="grid grid-cols-2 lg:grid-cols-5 gap-4"></div>
-        </div>
-
-        <h2 class="text-xl font-black text-white mb-6 uppercase tracking-widest border-l-4 border-[var(--utv-red)] pl-3">Explore Reviews</h2>
-        <div id="mainContent" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
-        
-        <div id="loader" class="flex justify-center py-10 hidden">
-            <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
-        </div>
+    <!-- Dynamic Sections -->
+    <div id="sectionsContainer">
+      <!-- sections will be populated by JS -->
     </div>
 
-    <footer class="bg-black border-t border-zinc-800 p-10 text-center">
-        <div class="max-w-4xl mx-auto mb-8 text-zinc-500 text-xs leading-relaxed">
-            <p class="mb-4 text-[var(--utv-red)] font-bold">U-TV REVIEW | INFORMATIONAL ENTITY</p>
-            <p>U-TV REVIEW stands firmly against digital piracy. This platform is for review and educational analysis only.</p>
-        </div>
-        <div class="flex flex-wrap justify-center gap-4">
-            <button onclick="showLegal()" class="px-8 py-3 bg-zinc-800 rounded-lg font-bold text-xs uppercase border border-zinc-700 hover:bg-zinc-700">Disclaimer</button>
-            <button onclick="window.location.href='mailto:HELP.WOWMOVIES@GMAIL.COM'" class="px-8 py-3 bg-red-900/30 text-red-500 rounded-lg font-bold text-xs uppercase border border-red-900/50">Copyright Issue</button>
-        </div>
-        <p class="mt-8 text-[10px] text-zinc-600">© 2026 U-TV REVIEW - ALL RIGHTS RESERVED</p>
-    </footer>
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" class="flex justify-center py-10 hidden">
+      <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  </div>
 
-    <script>
-    (function() {
-        const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-        const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
-        let currentPage = 1, currentFilter = 'trending', isSearching = false, isLoading = false;
+  <!-- Footer -->
+  <footer class="bg-black border-t border-zinc-800 py-12 px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex flex-wrap justify-center gap-6 text-sm mb-6">
+        <a href="#" id="dmcaLink" class="text-zinc-400 hover:text-[var(--utv-red)]">DMCA</a>
+        <a href="#" id="aboutLink" class="text-zinc-400 hover:text-[var(--utv-red)]">About Us</a>
+        <a href="#" id="disclaimerLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Disclaimer</a>
+        <a href="#" id="securityLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Security</a>
+        <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-zinc-400 hover:text-[var(--utv-red)]">Help / Copyright</a>
+      </div>
+      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | All data from TMDB</p>
+    </div>
+  </footer>
 
-        window.shareMovie = function(id, title, platform) {
-            const url = `https://u-tv-review.pages.dev/movie/${id}/`;
-            const text = `Check out the review of ${title} on U-TV REVIEW: `;
-            if(platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-            else if(platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-        };
+  <script>
+    // ========== CONFIG ==========
+    const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
+    const BACKDROP_BASE = 'https://image.tmdb.org/t/p/original';
 
-        window.showLegal = function() {
-            alert("U-TV REVIEW does not host content. We provide analytical reviews for fans.");
-        };
+    // Section definitions: id, title, API endpoint, type (movie or tv), load more page counter
+    const sections = [
+      { id: 'top250', title: '🏆 Top 250 Movies', endpoint: '/movie/top_rated', type: 'movie', page: 1 },
+      { id: 'trending', title: '🔥 Today Trending (Now Playing)', endpoint: '/movie/now_playing', type: 'movie', page: 1 },
+      { id: 'blockbuster', title: '💥 Blockbuster (Popular)', endpoint: '/movie/popular', type: 'movie', page: 1 },
+      { id: 'webseries', title: '📺 Trending Web Series', endpoint: '/tv/popular', type: 'tv', page: 1 },
+      { id: 'bollywood', title: '🇮🇳 Bollywood (Hindi)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'hi' } },
+      { id: 'hollywood', title: '🇺🇸 Hollywood (English)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'en' } },
+      { id: 'south', title: '🎭 South Indian Cinema', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'ta,te,ml,kn' } }
+    ];
 
-        async function loadDailyAutoPosts() {
-            try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=hi-IN`);
-                const data = await res.json();
-                document.getElementById('dailyGrid').innerHTML = data.results.slice(0, 5).map(movie => `
-                    <div class="movie-card-premium rounded-2xl p-2 cursor-pointer" onclick="location.href='/movie/${movie.id}/'">
-                        <img src="${IMG_BASE + movie.poster_path}" loading="lazy" class="w-full h-60 object-cover rounded-xl mb-2">
-                        <div class="text-[10px] font-bold truncate text-center uppercase">${movie.title}</div>
-                    </div>`).join('');
-            } catch (e) { console.log("Init Error"); }
+    let isLoading = false;
+
+    // Helper: build URL
+    function buildUrl(section) {
+      let url = `https://api.themoviedb.org/3${section.endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=${section.page}`;
+      if (section.params) {
+        for (let [k, v] of Object.entries(section.params)) {
+          url += `&${k}=${v}`;
         }
+      }
+      return url;
+    }
 
-        async function loadContent(append = false) {
-            if (isLoading) return;
-            isLoading = true;
-            document.getElementById('loader').classList.remove('hidden');
-            if (!append) { document.getElementById('mainContent').innerHTML = ''; currentPage = 1; }
-            let endpoint = currentFilter === 'top250' ? '/movie/top_rated' : (currentFilter === 'popular' ? '/movie/popular' : '/trending/all/week');
-            try {
-                const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${TMDB_API_KEY}&language=hi-IN&page=${currentPage}`);
-                const json = await res.json();
-                const html = json.results.map(movie => `
-                    <div class="movie-card-premium rounded-2xl p-3 relative group">
-                        <div onclick="location.href='/movie/${movie.id}/'" class="cursor-pointer">
-                            <img src="${movie.poster_path ? IMG_BASE + movie.poster_path : 'https://via.placeholder.com/500x750'}" class="w-full h-72 object-cover rounded-xl mb-3">
-                            <h3 class="font-bold text-sm mb-1 truncate">${movie.title || movie.name}</h3>
-                            <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${Math.round(movie.vote_average * 10)}% Score</div>
-                        </div>
-                        <div class="mt-4 flex gap-2">
-                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'whatsapp')" class="flex-1 py-2 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i></button>
-                            <button onclick="shareMovie(${movie.id}, '${(movie.title || movie.name).replace(/'/g, "\\'")}', 'telegram')" class="flex-1 py-2 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i></button>
-                        </div>
-                    </div>`).join('');
-                if (append) document.getElementById('mainContent').insertAdjacentHTML('beforeend', html);
-                else document.getElementById('mainContent').innerHTML = html;
-                currentPage++;
-            } catch (e) { console.error(e); }
-            isLoading = false;
-            document.getElementById('loader').classList.add('hidden');
+    // Render movie/TV card
+    function renderCard(item, type) {
+      const title = item.title || item.name;
+      const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
+      const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+      const id = item.id;
+      return `
+        <div class="movie-card-premium rounded-2xl p-3 cursor-pointer transition-all" onclick="location.href='/movie/${id}/'">
+          <img src="${poster}" class="w-full h-72 object-cover rounded-xl mb-3" loading="lazy">
+          <h3 class="font-bold text-sm mb-1 truncate">${escapeHtml(title)}</h3>
+          <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${rating}</div>
+          <div class="mt-2 flex gap-2">
+            <button onclick="shareMovie(${id}, '${escapeHtml(title).replace(/'/g, "\\'")}', 'whatsapp'); event.stopPropagation();" class="flex-1 py-1 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i> Share</button>
+            <button onclick="shareMovie(${id}, '${escapeHtml(title).replace(/'/g, "\\'")}', 'telegram'); event.stopPropagation();" class="flex-1 py-1 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i> Share</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadSection(section, append = false) {
+      if (isLoading) return;
+      isLoading = true;
+      const container = document.getElementById(`section-${section.id}`);
+      const loadBtn = document.getElementById(`loadmore-${section.id}`);
+      if (!append) {
+        container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
+      }
+      try {
+        const url = buildUrl(section);
+        const res = await fetch(url);
+        const data = await res.json();
+        let results = data.results || [];
+        if (section.type === 'tv') {
+          results = results.filter(r => r.poster_path); // ensure poster exists
         }
+        const html = results.map(item => renderCard(item, section.type)).join('');
+        if (append) {
+          container.insertAdjacentHTML('beforeend', html);
+        } else {
+          container.innerHTML = html;
+        }
+        section.page++;
+        // hide load more if no more pages
+        if (section.page > data.total_pages) {
+          if (loadBtn) loadBtn.style.display = 'none';
+        } else {
+          if (loadBtn) loadBtn.style.display = 'inline-block';
+        }
+      } catch (err) {
+        console.error(err);
+        if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load. Try again later.</div>';
+      }
+      isLoading = false;
+    }
 
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            const query = document.getElementById('searchInput').value.trim();
-            if(!query) { isSearching = false; loadContent(false); return; }
-            isSearching = true;
-            fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=hi-IN`)
-                .then(r => r.json()).then(json => {
-                    document.getElementById('mainContent').innerHTML = json.results.filter(m => m.poster_path).map(movie => `
-                        <div class="movie-card-premium rounded-2xl p-3 cursor-pointer" onclick="location.href='/movie/${movie.id}/'">
-                            <img src="${IMG_BASE + movie.poster_path}" class="w-full h-72 object-cover rounded-xl mb-3">
-                            <h3 class="font-bold text-sm truncate">${movie.title || movie.name}</h3>
-                        </div>`).join('');
-                });
-        });
+    // Build sections UI dynamically
+    function buildSectionsUI() {
+      const container = document.getElementById('sectionsContainer');
+      container.innerHTML = '';
+      for (let sec of sections) {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'mb-10';
+        sectionDiv.innerHTML = `
+          <div class="flex justify-between items-center">
+            <h2 class="section-title">${sec.title}</h2>
+            <button id="loadmore-${sec.id}" class="load-more-btn text-sm">Load More</button>
+          </div>
+          <div id="section-${sec.id}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mt-4"></div>
+        `;
+        container.appendChild(sectionDiv);
+        // attach load more event
+        const loadBtn = document.getElementById(`loadmore-${sec.id}`);
+        if (loadBtn) {
+          loadBtn.addEventListener('click', () => loadSection(sec, true));
+        }
+        // load first page
+        loadSection(sec, false);
+      }
+    }
 
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                isSearching = false;
-                loadContent(false);
-            });
-        });
+    // Global search
+    async function performSearch(query) {
+      if (!query.trim()) {
+        document.getElementById('searchResultsSection').classList.add('hidden');
+        return;
+      }
+      const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const results = data.results.filter(r => r.media_type === 'movie' || r.media_type === 'tv');
+      const grid = document.getElementById('searchResultsGrid');
+      if (results.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-4 text-zinc-400">No results found.</div>';
+      } else {
+        grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
+      }
+      document.getElementById('searchResultsSection').classList.remove('hidden');
+      // scroll to results
+      document.getElementById('searchResultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
 
-        window.onscroll = () => { if (!isSearching && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) loadContent(true); };
-        document.addEventListener('DOMContentLoaded', () => { loadDailyAutoPosts(); loadContent(); });
-    })();
-    </script>
+    // Share function (for buttons)
+    window.shareMovie = function(id, title, platform) {
+      const url = `https://u-tv-review.pages.dev/movie/${id}/`;
+      const text = `Check out the review of "${title}" on U-TV REVIEW: `;
+      if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
+      else if (platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+    };
+
+    // Legal modals
+    function showLegalModal(title, content) {
+      const modalDiv = document.createElement('div');
+      modalDiv.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm';
+      modalDiv.innerHTML = `
+        <div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl">
+          <h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2>
+          <p class="text-zinc-300 text-sm mb-6">${content}</p>
+          <button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button>
+        </div>
+      `;
+      document.body.appendChild(modalDiv);
+      modalDiv.querySelector('.close-modal').addEventListener('click', () => modalDiv.remove());
+    }
+
+    // Footer links
+    document.getElementById('dmcaLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. All data from TMDB. If you believe your copyright is infringed, please contact us at HELP.WOWMOVIES@GMAIL.COM. We will respond within 48 hours.');
+    });
+    document.getElementById('aboutLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights for movies and web series. We are fans of cinema, not a piracy platform.');
+    });
+    document.getElementById('disclaimerLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      showLegalModal('Disclaimer', 'U-TV REVIEW does not host any video files. All information is for educational and review purposes. Streaming links are not provided on this site.');
+    });
+    document.getElementById('securityLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected. Your privacy is respected.');
+    });
+
+    // Search event
+    document.getElementById('globalSearchBtn').addEventListener('click', () => {
+      const query = document.getElementById('globalSearchInput').value;
+      performSearch(query);
+    });
+    document.getElementById('globalSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch(e.target.value);
+    });
+
+    // Escape HTML for titles
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+
+    // Initialize
+    buildSectionsUI();
+  </script>
+
+  <!-- Adsterra popunder invoke -->
+  <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
 </body>
 </html>
