@@ -22,6 +22,30 @@
       color: white;
       font-family: 'Inter', sans-serif;
     }
+    /* 3D Button Styles */
+    .btn-3d {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.2s;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+      cursor: pointer;
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    }
+    .btn-trending { background: linear-gradient(135deg, #f857a6, #ff5858); color: white; }
+    .btn-blockbuster { background: linear-gradient(135deg, #f2994a, #f2c94c); color: black; }
+    .btn-hollywood { background: linear-gradient(135deg, #4facfe, #00f2fe); color: black; }
+    .btn-bollywood { background: linear-gradient(135deg, #43e97b, #38f9d7); color: black; }
+    .btn-south { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: black; }
+    .btn-top250 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); color: black; }
+
     .movie-card-premium {
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.05);
@@ -39,7 +63,6 @@
       padding-left: 12px;
       margin: 1.5rem 0 1rem;
       text-transform: uppercase;
-      letter-spacing: -0.5px;
     }
     .load-more-btn {
       background: #1e1f2a;
@@ -54,21 +77,10 @@
       background: var(--utv-red);
       border-color: var(--utv-red);
     }
-    footer a {
-      transition: 0.2s;
-    }
-    footer a:hover {
-      color: var(--utv-red);
-    }
-    .search-highlight {
-      background: var(--utv-red);
-      color: white;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
+    footer a { transition: 0.2s; }
+    footer a:hover { color: var(--utv-red); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
   </style>
-  <!-- Adsterra popunder (safe) -->
   <script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
 </head>
 <body class="min-h-screen">
@@ -86,7 +98,19 @@
     </div>
   </nav>
 
-  <div class="pt-24 pb-10 px-4 max-w-[1600px] mx-auto">
+  <!-- 3D Colorful Buttons (Sticky) -->
+  <div class="fixed top-[72px] left-0 w-full z-40 bg-black/80 backdrop-blur-md p-3 overflow-x-auto no-scrollbar border-b border-zinc-800">
+    <div class="flex justify-center gap-3 flex-nowrap md:flex-wrap max-w-7xl mx-auto">
+      <button class="btn-3d btn-trending" data-section="trending">🔥 Today Trending</button>
+      <button class="btn-3d btn-blockbuster" data-section="blockbuster">💥 Blockbuster</button>
+      <button class="btn-3d btn-hollywood" data-section="hollywood">🇺🇸 Hollywood</button>
+      <button class="btn-3d btn-bollywood" data-section="bollywood">🇮🇳 Bollywood</button>
+      <button class="btn-3d btn-south" data-section="south">🎭 South Indian</button>
+      <button class="btn-3d btn-top250" data-section="top250">🏆 Top 250</button>
+    </div>
+  </div>
+
+  <div class="pt-40 pb-10 px-4 max-w-[1600px] mx-auto">
     <!-- Search Results Section (hidden initially) -->
     <div id="searchResultsSection" class="hidden mb-8">
       <h2 class="text-xl font-black text-[var(--utv-red)] mb-4">🔍 Search Results</h2>
@@ -94,12 +118,9 @@
       <hr class="my-8 border-zinc-800">
     </div>
 
-    <!-- Dynamic Sections -->
-    <div id="sectionsContainer">
-      <!-- sections will be populated by JS -->
-    </div>
+    <!-- Dynamic Sections Container -->
+    <div id="sectionsContainer"></div>
 
-    <!-- Loading indicator -->
     <div id="loadingIndicator" class="flex justify-center py-10 hidden">
       <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
     </div>
@@ -115,7 +136,7 @@
         <a href="#" id="securityLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Security</a>
         <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-zinc-400 hover:text-[var(--utv-red)]">Help / Copyright</a>
       </div>
-      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | All data from TMDB</p>
+      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | All data from TMDB & OMDb</p>
     </div>
   </footer>
 
@@ -123,9 +144,8 @@
     // ========== CONFIG ==========
     const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
     const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
-    const BACKDROP_BASE = 'https://image.tmdb.org/t/p/original';
 
-    // Section definitions: id, title, API endpoint, type (movie or tv), load more page counter
+    // Section definitions: id, title, API endpoint, type, page
     const sections = [
       { id: 'top250', title: '🏆 Top 250 Movies', endpoint: '/movie/top_rated', type: 'movie', page: 1 },
       { id: 'trending', title: '🔥 Today Trending (Now Playing)', endpoint: '/movie/now_playing', type: 'movie', page: 1 },
@@ -138,18 +158,14 @@
 
     let isLoading = false;
 
-    // Helper: build URL
     function buildUrl(section) {
       let url = `https://api.themoviedb.org/3${section.endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=${section.page}`;
       if (section.params) {
-        for (let [k, v] of Object.entries(section.params)) {
-          url += `&${k}=${v}`;
-        }
+        for (let [k, v] of Object.entries(section.params)) url += `&${k}=${v}`;
       }
       return url;
     }
 
-    // Render movie/TV card
     function renderCard(item, type) {
       const title = item.title || item.name;
       const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
@@ -173,44 +189,30 @@
       isLoading = true;
       const container = document.getElementById(`section-${section.id}`);
       const loadBtn = document.getElementById(`loadmore-${section.id}`);
-      if (!append) {
-        container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
-      }
+      if (!append) container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
       try {
         const url = buildUrl(section);
         const res = await fetch(url);
         const data = await res.json();
         let results = data.results || [];
-        if (section.type === 'tv') {
-          results = results.filter(r => r.poster_path); // ensure poster exists
-        }
+        if (section.type === 'tv') results = results.filter(r => r.poster_path);
         const html = results.map(item => renderCard(item, section.type)).join('');
-        if (append) {
-          container.insertAdjacentHTML('beforeend', html);
-        } else {
-          container.innerHTML = html;
-        }
+        if (append) container.insertAdjacentHTML('beforeend', html);
+        else container.innerHTML = html;
         section.page++;
-        // hide load more if no more pages
-        if (section.page > data.total_pages) {
-          if (loadBtn) loadBtn.style.display = 'none';
-        } else {
-          if (loadBtn) loadBtn.style.display = 'inline-block';
-        }
-      } catch (err) {
-        console.error(err);
-        if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load. Try again later.</div>';
-      }
+        if (section.page > data.total_pages) { if (loadBtn) loadBtn.style.display = 'none'; }
+        else { if (loadBtn) loadBtn.style.display = 'inline-block'; }
+      } catch (err) { console.error(err); if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load.</div>'; }
       isLoading = false;
     }
 
-    // Build sections UI dynamically
     function buildSectionsUI() {
       const container = document.getElementById('sectionsContainer');
       container.innerHTML = '';
       for (let sec of sections) {
         const sectionDiv = document.createElement('div');
         sectionDiv.className = 'mb-10';
+        sectionDiv.id = `section-wrapper-${sec.id}`;
         sectionDiv.innerHTML = `
           <div class="flex justify-between items-center">
             <h2 class="section-title">${sec.title}</h2>
@@ -219,38 +221,41 @@
           <div id="section-${sec.id}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mt-4"></div>
         `;
         container.appendChild(sectionDiv);
-        // attach load more event
-        const loadBtn = document.getElementById(`loadmore-${sec.id}`);
-        if (loadBtn) {
-          loadBtn.addEventListener('click', () => loadSection(sec, true));
-        }
-        // load first page
+        document.getElementById(`loadmore-${sec.id}`).addEventListener('click', () => loadSection(sec, true));
         loadSection(sec, false);
       }
     }
 
-    // Global search
-    async function performSearch(query) {
-      if (!query.trim()) {
-        document.getElementById('searchResultsSection').classList.add('hidden');
-        return;
+    // Scroll to section when button clicked
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(`section-wrapper-${sectionId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }
+
+    // Attach button click handlers
+    document.querySelectorAll('[data-section]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const section = btn.dataset.section;
+        scrollToSection(section);
+      });
+    });
+
+    // Search functionality
+    async function performSearch(query) {
+      if (!query.trim()) { document.getElementById('searchResultsSection').classList.add('hidden'); return; }
       const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US`;
       const res = await fetch(url);
       const data = await res.json();
       const results = data.results.filter(r => r.media_type === 'movie' || r.media_type === 'tv');
       const grid = document.getElementById('searchResultsGrid');
-      if (results.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center py-4 text-zinc-400">No results found.</div>';
-      } else {
-        grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
-      }
+      if (results.length === 0) grid.innerHTML = '<div class="col-span-full text-center py-4 text-zinc-400">No results found.</div>';
+      else grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
       document.getElementById('searchResultsSection').classList.remove('hidden');
-      // scroll to results
       document.getElementById('searchResultsSection').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Share function (for buttons)
     window.shareMovie = function(id, title, platform) {
       const url = `https://u-tv-review.pages.dev/movie/${id}/`;
       const text = `Check out the review of "${title}" on U-TV REVIEW: `;
@@ -258,59 +263,25 @@
       else if (platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
     };
 
-    // Legal modals
     function showLegalModal(title, content) {
       const modalDiv = document.createElement('div');
       modalDiv.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm';
-      modalDiv.innerHTML = `
-        <div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl">
-          <h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2>
-          <p class="text-zinc-300 text-sm mb-6">${content}</p>
-          <button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button>
-        </div>
-      `;
+      modalDiv.innerHTML = `<div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl"><h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2><p class="text-zinc-300 text-sm mb-6">${content}</p><button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button></div>`;
       document.body.appendChild(modalDiv);
       modalDiv.querySelector('.close-modal').addEventListener('click', () => modalDiv.remove());
     }
 
-    // Footer links
-    document.getElementById('dmcaLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. All data from TMDB. If you believe your copyright is infringed, please contact us at HELP.WOWMOVIES@GMAIL.COM. We will respond within 48 hours.');
-    });
-    document.getElementById('aboutLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights for movies and web series. We are fans of cinema, not a piracy platform.');
-    });
-    document.getElementById('disclaimerLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      showLegalModal('Disclaimer', 'U-TV REVIEW does not host any video files. All information is for educational and review purposes. Streaming links are not provided on this site.');
-    });
-    document.getElementById('securityLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected. Your privacy is respected.');
-    });
+    document.getElementById('dmcaLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. All data from TMDB & OMDb. If you believe your copyright is infringed, contact HELP.WOWMOVIES@GMAIL.COM.'); });
+    document.getElementById('aboutLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights for movies and web series.'); });
+    document.getElementById('disclaimerLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('Disclaimer', 'U-TV REVIEW does not host any video files. All information is for educational and review purposes.'); });
+    document.getElementById('securityLink').addEventListener('click', (e) => { e.preventDefault(); showLegalModal('Security Policy', 'We use HTTPS encryption. No personal data is collected.'); });
 
-    // Search event
-    document.getElementById('globalSearchBtn').addEventListener('click', () => {
-      const query = document.getElementById('globalSearchInput').value;
-      performSearch(query);
-    });
-    document.getElementById('globalSearchInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') performSearch(e.target.value);
-    });
+    document.getElementById('globalSearchBtn').addEventListener('click', () => performSearch(document.getElementById('globalSearchInput').value));
+    document.getElementById('globalSearchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(e.target.value); });
 
-    // Escape HTML for titles
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-    }
-
-    // Initialize
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
     buildSectionsUI();
   </script>
-
-  <!-- Adsterra popunder invoke -->
   <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
 </body>
 </html>
