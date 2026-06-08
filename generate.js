@@ -13,19 +13,6 @@ const OUTPUT_DIR = './';
 const MAX_MOVIES = 200;
 const DELAY_MS = 150;
 
-const EMBED_SERVERS = [
-  { name: 'Server 1 (VidSrc.to)', url: 'https://vidsrc.to/embed/movie/%ID%' },
-  { name: 'Server 2 (VidSrc.xyz)', url: 'https://vidsrc.xyz/embed/movie/%ID%' },
-  { name: 'Server 3 (Embed.su)', url: 'https://embed.su/embed/movie/%ID%' },
-  { name: 'Server 4 (AutoEmbed.to)', url: 'https://autoembed.to/movie/tmdb/%ID%' },
-  { name: 'Server 5 (VidLink.pro)', url: 'https://vidlink.pro/movie/%ID%' },
-  { name: 'Server 6 (MoviesAPI.club)', url: 'https://moviesapi.club/movie/%ID%' },
-  { name: 'Server 7 (2Embed.cc)', url: 'https://2embed.org/embed/movie/%ID%' },
-  { name: 'Server 8 (SmashyStream)', url: 'https://embed.smashystream.com/movie/%ID%' },
-  { name: 'Server 9 (MultiEmbed.cx)', url: 'https://multiembed.cx/?video_id=%ID%&tmdb=1' },
-  { name: 'Server 10 (VidSrc.cc)', url: 'https://vidsrc.cc/v2/embed/movie/%ID%' }
-];
-
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
@@ -102,8 +89,7 @@ async function generateMoviePage(movie, details) {
   const budget = details.budget ? `$${details.budget.toLocaleString()}` : 'N/A';
   const revenue = details.revenue ? `$${details.revenue.toLocaleString()}` : 'N/A';
   const imdbUrl = details.imdb_id ? `https://www.imdb.com/title/${details.imdb_id}/` : '#';
-
-  const serverButtons = EMBED_SERVERS.map((s, i) => `<button class="server-btn ${i === 0 ? 'active' : ''}" data-url="${s.url.replace('%ID%', movie.id)}">${s.name}</button>`).join('');
+  const trailerUrl = details.trailer ? `https://www.youtube.com/embed/${details.trailer.key}` : null;
 
   const castHtml = cast.map(actor => `
     <div class="cast-item">
@@ -130,14 +116,14 @@ async function generateMoviePage(movie, details) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} (${releaseYear}) - Review & Watch Online | U-TV REVIEW</title>
-  <meta name="description" content="${escapeHtml(overviewEn.substring(0, 160))} - ⭐ ${rating}/10, ${runtime}, ${genres}. Full review, story, cast, and streaming links.">
-  <meta name="keywords" content="${escapeHtml(title)}, movie review, ${genres}, watch online, U-TV REVIEW">
+  <title>${escapeHtml(title)} (${releaseYear}) - In-Depth Review & Analysis | U-TV REVIEW</title>
+  <meta name="description" content="${escapeHtml(overviewEn.substring(0, 160))} - ⭐ ${rating}/10, ${runtime}, ${genres}. Full story, cast, budget, revenue, and critical analysis.">
+  <meta name="keywords" content="${escapeHtml(title)}, movie review, analysis, ${genres}, U-TV REVIEW">
   <link rel="canonical" href="${SITE_URL}/movie/${movie.id}/">
-  <meta property="og:title" content="${escapeHtml(title)} (${releaseYear}) - Review & Watch">
+  <meta property="og:title" content="${escapeHtml(title)} (${releaseYear}) - Review & Analysis">
   <meta property="og:description" content="${escapeHtml(overviewEn.substring(0, 160))}">
   <meta property="og:image" content="${poster}">
-  <meta property="og:type" content="video.movie">
+  <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -151,14 +137,11 @@ async function generateMoviePage(movie, details) {
     .cast-list { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
     .cast-item { width: 110px; text-align: center; font-size: 0.7rem; }
     .cast-item img { width: 100%; border-radius: 12px; margin-bottom: 5px; }
-    .server-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
-    .server-btn { background: #1e1f2a; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; transition: 0.2s; }
-    .server-btn.active, .server-btn:hover { background: var(--utv-red); }
-    .player-container { position: relative; padding-bottom: 56.25%; height: 0; margin-top: 20px; }
-    .player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 16px; }
     .share-btn { padding: 8px 16px; border-radius: 30px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
     .whatsapp { background: #25D366; color: black; }
     .telegram { background: #0088cc; }
+    .trailer-container { position: relative; padding-bottom: 56.25%; height: 0; margin-top: 20px; }
+    .trailer-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 16px; }
     @media (max-width: 768px) { .movie-grid { grid-template-columns: 1fr; } }
   </style>
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
@@ -204,7 +187,12 @@ async function generateMoviePage(movie, details) {
 
     <div class="mb-8"><h2 class="text-2xl font-bold border-l-4 border-[var(--utv-red)] pl-3 mb-4">🎭 Top Cast</h2><div class="cast-list">${castHtml}</div></div>
 
-    <div class="mb-8"><h2 class="text-2xl font-bold border-l-4 border-[var(--utv-red)] pl-3 mb-4">📺 Streaming Servers</h2><div class="server-buttons" id="serverButtons">${serverButtons}</div><div class="player-container"><iframe id="playerFrame" src="${EMBED_SERVERS[0].url.replace('%ID%', movie.id)}" allowfullscreen></iframe></div></div>
+    ${trailerUrl ? `
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold border-l-4 border-[var(--utv-red)] pl-3 mb-4">🎬 Official Trailer</h2>
+      <div class="trailer-container"><iframe src="${trailerUrl}" allowfullscreen></iframe></div>
+    </div>
+    ` : ''}
 
     <div class="flex gap-4 justify-center mt-8">
       <button onclick="shareMovie('whatsapp')" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
@@ -213,41 +201,35 @@ async function generateMoviePage(movie, details) {
   </div>
 
   <footer class="bg-black border-t border-zinc-800 p-6 text-center text-zinc-500 text-xs">
-    <p>© 2026 U-TV REVIEW – Analysis & Reviews | All data from TMDB | No files hosted</p>
+    <p>© 2026 U-TV REVIEW – Critical Analysis & Reviews | All data from TMDB | No files hosted</p>
     <p><a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-[var(--utv-red)]">DMCA / Report</a></p>
   </footer>
 
   <script>
     function shareMovie(platform) {
       const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("Check out the review and streaming options for ${escapeHtml(title)} on U-TV REVIEW");
+      const text = encodeURIComponent("Check out the detailed review of ${escapeHtml(title)} on U-TV REVIEW");
       if (platform === 'whatsapp') window.open(\`https://api.whatsapp.com/send?text=\${text} \${url}\`, '_blank');
       else if (platform === 'telegram') window.open(\`https://t.me/share/url?url=\${url}&text=\${text}\`, '_blank');
     }
-    document.querySelectorAll('.server-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('playerFrame').src = btn.dataset.url;
-      });
-    });
   </script>
   <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
 </body>
 </html>`;
   fs.writeFileSync(path.join(movieDir, 'index.html'), html);
-  console.log(`✅ Movie page: /movie/${movie.id}/`);
+  console.log(`✅ Movie review page: /movie/${movie.id}/`);
 }
 
 async function generateHomepage(movies) {
+  // This homepage is only used as a fallback; the actual dynamic index.html is separate.
+  // We still generate a static one for completeness (will be overwritten by the real index.html).
   let cards = '';
   for (let m of movies.slice(0, 100)) {
     const poster = m.poster_path ? `${IMG_BASE}/w342${m.poster_path}` : 'https://placehold.co/342x513?text=No+Poster';
     cards += `<div class="movie-card" onclick="location.href='/movie/${m.id}/'"><img src="${poster}" loading="lazy" alt="${escapeHtml(m.title)}"><div class="title">${escapeHtml(m.title)}</div><div class="rating">⭐ ${(m.vote_average || 0).toFixed(1)}</div></div>`;
   }
-  const homepageHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>U-TV REVIEW – Movie Analysis, Reviews & Watch Online</title><meta name="description" content="In-depth movie reviews, ratings, cast, box office, and streaming links. Latest movies analysis."><meta name="keywords" content="movie reviews, watch movies online, U-TV REVIEW, film analysis"><link rel="canonical" href="${SITE_URL}/"><link rel="sitemap" href="/sitemap.xml"><link rel="preconnect" href="https://cdn.tailwindcss.com"><script src="https://cdn.tailwindcss.com"></script><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#050508;color:#fff;font-family:sans-serif;padding:20px}h1{text-align:center;color:#e50914;margin:20px 0}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;max-width:1400px;margin:auto}.movie-card{background:#1e1f2a;border-radius:16px;overflow:hidden;cursor:pointer;transition:0.2s}.movie-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(229,9,20,0.3)}.movie-card img{width:100%;aspect-ratio:2/3;object-fit:cover}.title{padding:12px;font-weight:bold;text-align:center}.rating{text-align:center;padding-bottom:12px;color:#ffcc00}footer{text-align:center;color:#666;margin-top:40px}</style><script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script></head><body><h1>🎬 U-TV REVIEW – Movie Analysis & Reviews</h1><div class="grid">${cards}</div><footer>© U-TV REVIEW – All data from TMDB | No videos hosted | <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" style="color:#e50914">DMCA</a></footer><script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script></body></html>`;
-  fs.writeFileSync('index.html', homepageHtml);
-  console.log('✅ Homepage generated (static grid)');
+  const homepageHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>U-TV REVIEW – Movie Analysis, Reviews & Ratings</title><meta name="description" content="In-depth movie reviews, ratings, cast, box office analysis."><link rel="canonical" href="${SITE_URL}/"><link rel="sitemap" href="/sitemap.xml"><script src="https://cdn.tailwindcss.com"></script><style>... same as above ...</style></head><body>...</body></html>`;
+  // Not writing because we use dynamic index.html, but keep for sitemap generation.
 }
 
 function generateSitemap(movies) {
@@ -261,7 +243,7 @@ function generateSitemap(movies) {
 }
 
 (async () => {
-  console.log('🚀 Generating static movie pages (with ads & full metadata)');
+  console.log('🚀 Generating static review pages (no streaming servers)');
   const movies = await getAllMovies();
   console.log(`📦 Fetched ${movies.length} movies.`);
   if (fs.existsSync('./movie')) fs.rmSync('./movie', { recursive: true, force: true });
@@ -272,7 +254,6 @@ function generateSitemap(movies) {
     if (details) await generateMoviePage(movies[i], details);
     await new Promise(r => setTimeout(r, DELAY_MS));
   }
-  await generateHomepage(movies);
   generateSitemap(movies);
-  console.log('🎉 Build complete! Now push to GitHub and Cloudflare will deploy.');
+  console.log('🎉 Build complete! Movie review pages are ready. Use the provided index.html (dynamic) for homepage.');
 })();
