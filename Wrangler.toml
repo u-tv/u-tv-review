@@ -1,0 +1,11 @@
+# wrangler.toml for u-tv-review.pages.dev
+# Note: This file is optional for Cloudflare Pages if you're not using Workers or Pages Functions.
+# It can be used to set environment variables, compatibility date, etc.
+
+name = "u-tv-review"
+compatibility_date = "2025-01-01"
+
+# Environment variables for build time (they will be available in your build command)
+[vars]
+NODE_VERSION = "18"
+TMDB_API_KEY = "5bf61a62fd4647aa7debed7d6f2db079"
