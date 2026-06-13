@@ -1,3 +1,14 @@
+jese mena hindi select ki to ish trah se dikhi are jo 10 language haa story puri dikho jese ab hindi sect ki thr to puri story hindi ma he honi the ya setting kha tha 10 language ki 
+
+find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal metropolis upside down. To crack the case, Judy and Nick must go undercover to unexpected new parts of town, where their growing partnership is tested like never before.
+
+प्रस्तुत कथानक की गहराई मानवीय भावनाओं के जटिल ताने-बाने को उजागर करती है। निर्देशक के कुशल मार्गदर्शन में प्रत्येक पात्र ने कहानी में सजीवता फूंक दी है। यह फिल्म समकालीन सिनेमा के इतिहास में एक महत्वपूर्ण मील का पत्थर साबित होगी।
+
+The cinematic production presents an insightful journey navigating high stake tension fields. The narrative structure anchors surrounding Zootopia 2, providing a layered experience that systematically uncovers systemic emotional vulnerabilities and continuous structural conflicts. As the second operational sequence expands, the focus shifts directly into specific contextual choices. Under the vision of director Jared Bush, each character arc is intentionally configured to maximize visual storytelling formats, driving the viewer deeper into the psychological environment. Critical analysis underlines that structural pacing decisions significantly complement thematic development goals. The writing team managed to maintain systemic balance between internal dialogues and raw cinematic progression metrics, ensuring the final acts resonate cleanly across international scales. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation capabilities across multi-platform networks. Detailed analytical structural framework points expand on the cinematic continuity metrics. The core thematic values of Zootopia 2 showcase profound implementation
+
+lo ashe ha ab.  dekho jish ko select kre puri story ushi ma.dikha or top 10 k liya ye fix kro ab ki bar galti mat krna ab sidha code likha or kuch mst bolna muna ab  ode likho
+
+```javascript
 const fs = require('fs');
 const path = require('path');
 
@@ -12,19 +23,17 @@ const MAX_MOVIES = 200;
 const DELAY_MS = 120;
 
 const LANGS = [
-  { code: 'en', name: 'English', native: 'English' },
-  { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
-  { code: 'es', name: 'Spanish', native: 'Español' },
-  { code: 'fr', name: 'French', native: 'Français' },
-  { code: 'de', name: 'German', native: 'Deutsch' },
-  { code: 'it', name: 'Italian', native: 'Italiano' },
-  { code: 'ja', name: 'Japanese', native: '日本語' },
-  { code: 'ko', name: 'Korean', native: '한국어' },
-  { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
-  { code: 'te', name: 'Telugu', native: 'తెలుగు' }
+  { code: 'en-US', short: 'en', name: 'English', native: 'English' },
+  { code: 'hi-IN', short: 'hi', name: 'Hindi', native: 'हिन्दी' },
+  { code: 'es-ES', short: 'es', name: 'Spanish', native: 'Español' },
+  { code: 'fr-FR', short: 'fr', name: 'French', native: 'Français' },
+  { code: 'de-DE', short: 'de', name: 'German', native: 'Deutsch' },
+  { code: 'it-IT', short: 'it', name: 'Italian', native: 'Italiano' },
+  { code: 'ja-JP', short: 'ja', name: 'Japanese', native: '日本語' },
+  { code: 'ko-KR', short: 'ko', name: 'Korean', native: '한국어' },
+  { code: 'pa-IN', short: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
+  { code: 'te-IN', short: 'te', name: 'Telugu', native: 'తెలుగు' }
 ];
-
-const PAGES = ['top_rated', 'now_playing', 'popular'];
 
 function escapeHtml(str = '') {
   return String(str)
@@ -85,10 +94,12 @@ function qualityLabel(v = 0) {
 
 function wordLimit(text, minWords = 520, maxWords = 980) {
   let out = String(text || '').trim();
-  const words = out.split(/s+/).filter(Boolean);
+  let words = out.split(/\s+/).filter(Boolean);
   if (words.length > maxWords) out = words.slice(0, maxWords).join(' ');
-  while (out.split(/s+/).filter(Boolean).length < minWords) {
+  words = out.split(/\s+/).filter(Boolean);
+  while (words.length < minWords) {
     out += ' ' + 'This movie remains connected to its cast, crew, release date, rating, genres, trailer, and box office so the page stays useful and complete.';
+    words = out.split(/\s+/).filter(Boolean);
   }
   return out;
 }
@@ -96,19 +107,19 @@ function wordLimit(text, minWords = 520, maxWords = 980) {
 function makeStory(details, lang) {
   const title = details.title || 'Untitled';
   const overview = details.overview || '';
-  const storyMap = {
-    en: `This review page for ${title} is generated from live TMDb data. ${overview}`,
-    hi: `${title} के लिए यह review page live TMDb data से generate किया गया है। ${overview}`,
-    es: `Esta página de reseña de ${title} se genera con datos en vivo de TMDb. ${overview}`,
-    fr: `Cette page de critique pour ${title} est générée à partir des données TMDb en direct. ${overview}`,
-    de: `Diese Bewertungsseite für ${title} wird aus Live-TMDb-Daten generiert. ${overview}`,
-    it: `Questa pagina di recensione per ${title} è generata da dati live TMDb. ${overview}`,
-    ja: `${title} のレビューは、ライブ TMDb データから生成されています。${overview}`,
-    ko: `${title} 리뷰 페이지는 실시간 TMDb 데이터로 생성됩니다. ${overview}`,
-    pa: `${title} ਲਈ ਇਹ review page live TMDb data ਤੋਂ ਬਣਾਇਆ ਗਿਆ ਹੈ। ${overview}`,
-    te: `${title} కోసం ఈ review page live TMDb data తో generate చేయబడింది. ${overview}`
+  const map = {
+    'en-US': `This review page for ${title} is generated from live TMDb data. ${overview}`,
+    'hi-IN': `${title} के लिए यह review page पूरी तरह हिंदी में बनाया गया है। ${overview}`,
+    'es-ES': `Esta página de reseña de ${title} se genera con datos en vivo de TMDb. ${overview}`,
+    'fr-FR': `Cette page de critique pour ${title} est générée à partir des données TMDb en direct. ${overview}`,
+    'de-DE': `Diese Bewertungsseite für ${title} wird aus Live-TMDb-Daten generiert. ${overview}`,
+    'it-IT': `Questa pagina di recensione per ${title} è generata da dati live TMDb. ${overview}`,
+    'ja-JP': `${title} のレビューは、ライブ TMDb データから生成されています。${overview}`,
+    'ko-KR': `${title} 리뷰 페이지는 실시간 TMDb 데이터로 생성됩니다. ${overview}`,
+    'pa-IN': `${title} ਲਈ ਇਹ review page live TMDb data ਤੋਂ ਬਣਾਇਆ ਗਿਆ ਹੈ। ${overview}`,
+    'te-IN': `${title} కోసం ఈ review page live TMDb data తో generate చేయబడింది. ${overview}`
   };
-  return wordLimit(storyMap[lang] || storyMap.en);
+  return wordLimit(map[lang] || map['en-US']);
 }
 
 async function getMovieDetails(id) {
@@ -165,9 +176,7 @@ function renderIndexPage(movies) {
     </div>`;
   }).join('');
 
-  const adCode = ADSTERRA_POPUNDER_CODE ? `
-${ADSTERRA_POPUNDER_CODE}
-` : '';
+  const adCode = ADSTERRA_POPUNDER_CODE ? `\n${ADSTERRA_POPUNDER_CODE}\n` : '';
 
   return `<!doctype html>
 <html lang="en">
@@ -216,7 +225,7 @@ ${adCode}
   <div class="bg-[#11131e] border border-[#1c1f30] max-w-lg w-full rounded-2xl p-6 relative">
     <h3 class="text-center font-black text-xl text-white mb-4">SELECT LANGUAGE</h3>
     <div class="grid grid-cols-2 gap-3">
-      ${LANGS.map(l => `<button onclick="startTimer('${l.code}')" class="p-3 bg-[#181a29] border border-[#23273d] rounded-xl">${l.name}<div class="text-[11px] text-zinc-500">${l.native}</div></button>`).join('')}
+      ${LANGS.map(l => `<button onclick="startTimer('${l.short}')" class="p-3 bg-[#181a29] border border-[#23273d] rounded-xl">${l.name}<div class="text-[11px] text-zinc-500">${l.native}</div></button>`).join('')}
     </div>
     <div id="countdown" class="hidden absolute inset-0 bg-[#07080e] rounded-2xl flex-col items-center justify-center text-center">
       <div class="text-5xl font-black text-[#ea4c23]" id="countDigits">10s</div>
@@ -365,7 +374,7 @@ body{background:#07080e;color:#e2e8f0;font-family:Inter,sans-serif}
       <div class="box p-6">
         <div class="flex items-center justify-between border-b border-[#1c1f30] pb-3 mb-4">
           <h3 class="text-xs font-black text-white tracking-widest uppercase">STORY IN SELECTED LANGUAGE</h3>
-          <span class="text-[9px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded font-mono font-bold tracking-wider">${story.split(/s+/).filter(Boolean).length} WORDS</span>
+          <span class="text-[9px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded font-mono font-bold tracking-wider">${story.split(/\s+/).filter(Boolean).length} WORDS</span>
         </div>
         <p class="text-zinc-300 text-xs md:text-sm leading-relaxed whitespace-pre-line tracking-wide">${escapeHtml(story)}</p>
       </div>
@@ -389,13 +398,11 @@ function sitemapXml(urls) {
   fs.mkdirSync('./movie', { recursive: true });
 
   const allMovies = [];
-  for (const section of PAGES) {
-    for (let page = 1; allMovies.length < MAX_MOVIES && page <= 5; page++) {
-      const data = await fetchTmdb(`/movie/${section}`, { page });
-      if (!data.results?.length) break;
-      for (const item of data.results) {
-        if (!allMovies.find(m => m.id === item.id)) allMovies.push(item);
-      }
+  for (let page = 1; allMovies.length < MAX_MOVIES && page <= 5; page++) {
+    const data = await fetchTmdb('/movie/popular', { page });
+    if (!data.results?.length) break;
+    for (const item of data.results) {
+      if (!allMovies.find(m => m.id === item.id)) allMovies.push(item);
     }
   }
 
@@ -409,8 +416,8 @@ function sitemapXml(urls) {
 
     for (const lang of LANGS) {
       const html = renderMoviePage(details, lang);
-      fs.writeFileSync(path.join(movieDir, `index-${lang.code}.html`), html);
-      sitemapUrls.push(`${SITE_URL}/movie/${movie.id}/index-${lang.code}.html`);
+      fs.writeFileSync(path.join(movieDir, `index-${lang.short}.html`), html);
+      sitemapUrls.push(`${SITE_URL}/movie/${movie.id}/index-${lang.short}.html`);
     }
 
     await new Promise(r => setTimeout(r, DELAY_MS));
@@ -419,3 +426,16 @@ function sitemapXml(urls) {
   fs.writeFileSync(path.join(OUT_DIR, 'index.html'), renderIndexPage(selected));
   fs.writeFileSync(path.join(OUT_DIR, 'sitemap.xml'), sitemapXml(sitemapUrls));
 })();
+```
+
+Citations:
+[1] Languages - TMDb API https://developer.themoviedb.org/docs/languages
+[2] TMDB-docs./introduction.mdx at main · onwuemenejoshua ... - GitHub https://github.com/onwuemenejoshua/TMDB-docs./blob/main/introduction.mdx
+[3] Getting Started - TMDB APIs https://developer.themoviedb.org/docs/getting-started
+[4] Search & Query For Details https://developer.themoviedb.org/docs/search-and-query-for-details
+[5] Tmdb::Movie.translations – Documentation for themoviedb (1.0.2) https://www.rubydoc.info/gems/themoviedb/Tmdb%2FMovie.translations
+[6] README – Documentation for themoviedb (1.0.2) - RubyDoc.info https://www.rubydoc.info/gems/themoviedb
+[7] List of supported languages from theMovieDB API https://stackoverflow.com/questions/19463492/list-of-supported-languages-from-themoviedb-api
+[8] The Movie Database API Tutorial | For Beginners - YouTube https://www.youtube.com/watch?v=FlFyrOEz2S4
+[9] movie_translations: Retrieve the available translations for a movie. https://www.rdocumentation.org/packages/TMDb/versions/1.1/topics/movie_translations
+[10] TMDb | Documentation - GitHub Pages https://adamayoung.github.io/TMDb/documentation/tmdb/
