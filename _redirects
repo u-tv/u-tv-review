@@ -1,2 +1,9 @@
-/movie/* /index.html  200
-/* /index.html  200
+/about /about/ 301
+/dmca /dmca/ 301
+/disclaimer /disclaimer/ 301
+/contact /contact/ 301
+/privacy /privacy/ 301
+/terms /terms/ 301
+
+/movie/* /movie/:splat/ 200
+/tv/* /tv/:splat/ 200
