@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="refresh" content="4; url=/">
+  <title>404 - Page Not Found | U-TV REVIEW</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at top,#12131a 0%,#050508 100%);
+      color:#fff;
+      font-family:system-ui,-apple-system,sans-serif;
+      padding:20px;
+    }
+    .box{
+      width:100%;
+      max-width:560px;
+      background:#0f111a;
+      border:1px solid #1e2235;
+      border-radius:24px;
+      padding:30px 24px;
+      text-align:center;
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+    h1{
+      margin:0 0 12px;
+      font-size:2rem;
+      line-height:1.2;
+    }
+    p{
+      margin:0 0 20px;
+      color:#cbd5e1;
+      line-height:1.7;
+    }
+    a{
+      display:inline-block;
+      background:#ea4c23;
+      color:#fff;
+      text-decoration:none;
+      padding:11px 18px;
+      border-radius:999px;
+      font-weight:700;
+    }
+    .note{
+      margin-top:14px;
+      font-size:.85rem;
+      color:#94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>404 - Page Not Found</h1>
+    <p>Jo page aap dhoondh rahe hain wo available nahi hai. Aapko home page par bheja ja raha hai.</p>
+    <a href="/">Go Home</a>
+    <div class="note">Redirecting in 4 seconds...</div>
+  </div>
+</body>
+</html>
