@@ -2,330 +2,344 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <meta name="google-site-verification" content="r4qiBWvH6r8g4r5B7QDJDwdewlm9aCNhUoaNleV1soA" />
-  <title>U-TV REVIEW – Movie Analysis, Reviews & Ratings</title>
-  <meta name="description" content="In-depth movie reviews, ratings, cast, box office analysis. Latest from Bollywood, Hollywood, South, and Web Series.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0c10">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="U-TV REVIEW provides movie and web series discovery, categories, trending content, business details, and easy contact access.">
+  <meta name="keywords" content="U-TV REVIEW, movies, web series, trailers, Hindi, English, Punjabi, South, contact, about, DMCA, disclaimer">
   <link rel="canonical" href="https://u-tv-review.pages.dev/">
-  <link rel="sitemap" href="/sitemap.xml">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --utv-red: #e50914;
-      --bg-deep: #050505;
-      --card-bg: #121212;
+  <title>U-TV REVIEW | Movies, Web Series, Trailers & Contact</title>
+  <meta property="og:title" content="U-TV REVIEW | Movies, Web Series, Trailers & Contact">
+  <meta property="og:description" content="Movie and web series discovery with trending content, business details, and contact options.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://u-tv-review.pages.dev/">
+  <meta property="og:image" content="https://u-tv-review.pages.dev/og-image.jpg">
+  <meta name="google-site-verification" content="PASTE_YOUR_SEARCH_CONSOLE_CODE_HERE">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "U-TV REVIEW",
+    "url": "https://u-tv-review.pages.dev/",
+    "description": "U-TV REVIEW provides movie and web series discovery with search and categories.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://u-tv-review.pages.dev/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
-    body {
-      background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg-deep) 100%);
-      color: white;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    /* Modern button styles – no awkward 3D, clean & touch-friendly */
-    .category-scroll {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      padding: 8px 4px 12px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .category-scroll::-webkit-scrollbar {
-      height: 3px;
-    }
-    .cat-btn {
-      flex: 0 0 auto;
-      padding: 10px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      letter-spacing: 0.3px;
-      background: rgba(20,20,30,0.9);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .cat-btn i {
-      margin-right: 6px;
-      font-size: 0.9rem;
-    }
-    .cat-btn:active {
-      transform: scale(0.96);
-    }
-    /* Individual button colors on hover/active (subtle) */
-    .cat-btn[data-section="trending"]:hover { background: #f857a6; border-color: #f857a6; color: white; }
-    .cat-btn[data-section="blockbuster"]:hover { background: #f2994a; border-color: #f2994a; color: black; }
-    .cat-btn[data-section="hollywood"]:hover { background: #4facfe; border-color: #4facfe; color: black; }
-    .cat-btn[data-section="bollywood"]:hover { background: #43e97b; border-color: #43e97b; color: black; }
-    .cat-btn[data-section="south"]:hover { background: #a18cd1; border-color: #a18cd1; color: black; }
-    .cat-btn[data-section="top250"]:hover { background: #ff9a9e; border-color: #ff9a9e; color: black; }
-
-    .movie-card-premium {
-      background: var(--card-bg);
-      border: 1px solid rgba(255,255,255,0.05);
-      transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
-    }
-    .movie-card-premium:hover {
-      transform: translateY(-4px);
-      border-color: var(--utv-red);
-      box-shadow: 0 15px 25px -12px rgba(229,9,20,0.25);
-    }
-    .section-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      border-left: 4px solid var(--utv-red);
-      padding-left: 12px;
-      margin: 1.5rem 0 1rem;
-      letter-spacing: -0.3px;
-    }
-    .load-more-btn {
-      background: #1e1f2a;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      transition: 0.2s;
-      cursor: pointer;
-    }
-    .load-more-btn:hover {
-      background: var(--utv-red);
-    }
-    footer a {
-      transition: 0.2s;
-    }
-    footer a:hover {
-      color: var(--utv-red);
-    }
-    /* Better mobile grid */
-    @media (max-width: 640px) {
-      .grid {
-        gap: 12px;
-      }
-      .movie-card-premium .text-sm {
-        font-size: 0.7rem;
-      }
-      .cat-btn {
-        padding: 8px 16px;
-        font-size: 0.75rem;
-      }
-    }
-  </style>
-  <!-- Adsterra popunder (safe) -->
-  <script data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js"></script>
-</head>
-<body class="min-h-screen">
-
-  <!-- Fixed Navbar -->
-  <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-[var(--utv-red)] p-3 md:p-4 flex justify-between items-center shadow-lg">
-    <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
-      <span class="font-black text-2xl md:text-3xl text-white">U-TV<span class="text-[var(--utv-red)]">.REVIEW</span></span>
-    </div>
-    <div class="flex items-center space-x-2 flex-1 justify-end">
-      <div class="relative flex items-center w-full max-w-[200px] md:max-w-md">
-        <input id="globalSearchInput" type="search" placeholder="Search reviews..." class="px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-full w-full focus:outline-none focus:border-[var(--utv-red)] text-sm">
-        <button id="globalSearchBtn" class="absolute right-1 px-4 py-1.5 bg-[var(--utv-red)] rounded-full font-bold text-xs">GO</button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Category Buttons (Horizontal scroll on mobile, clean pill design) -->
-  <div class="fixed top-[70px] left-0 w-full z-40 bg-black/80 backdrop-blur-sm border-b border-zinc-800 py-2 px-3">
-    <div class="category-scroll max-w-7xl mx-auto">
-      <button class="cat-btn" data-section="trending"><i class="fas fa-fire"></i> Trending</button>
-      <button class="cat-btn" data-section="blockbuster"><i class="fas fa-bolt"></i> Blockbuster</button>
-      <button class="cat-btn" data-section="hollywood"><i class="fas fa-film"></i> Hollywood</button>
-      <button class="cat-btn" data-section="bollywood"><i class="fas fa-language"></i> Bollywood</button>
-      <button class="cat-btn" data-section="south"><i class="fas fa-mask"></i> South Indian</button>
-      <button class="cat-btn" data-section="top250"><i class="fas fa-trophy"></i> Top 250</button>
-    </div>
-  </div>
-
-  <!-- Main content area (add padding to avoid fixed elements overlap) -->
-  <div class="pt-44 pb-10 px-4 max-w-[1600px] mx-auto">
-    <!-- Search Results Section (hidden initially) -->
-    <div id="searchResultsSection" class="hidden mb-8">
-      <h2 class="text-xl font-black text-[var(--utv-red)] mb-4">🔍 Search Results</h2>
-      <div id="searchResultsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
-      <hr class="my-8 border-zinc-800">
-    </div>
-
-    <!-- Dynamic Sections Container (injected by JS) -->
-    <div id="sectionsContainer"></div>
-
-    <div id="loadingIndicator" class="flex justify-center py-10 hidden">
-      <div class="w-10 h-10 border-4 border-[var(--utv-red)] border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="bg-black border-t border-zinc-800 py-12 px-4 text-center">
-    <div class="max-w-4xl mx-auto">
-      <div class="flex flex-wrap justify-center gap-6 text-sm mb-6">
-        <a href="#" id="dmcaLink" class="text-zinc-400 hover:text-[var(--utv-red)]">DMCA</a>
-        <a href="#" id="aboutLink" class="text-zinc-400 hover:text-[var(--utv-red)]">About</a>
-        <a href="#" id="disclaimerLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Disclaimer</a>
-        <a href="#" id="securityLink" class="text-zinc-400 hover:text-[var(--utv-red)]">Security</a>
-        <a href="mailto:HELP.WOWMOVIES@GMAIL.COM" class="text-zinc-400 hover:text-[var(--utv-red)]">Help</a>
-      </div>
-      <p class="text-zinc-600 text-xs">© 2026 U-TV REVIEW – Critical Analysis & Reviews | Data from TMDB & OMDb</p>
-    </div>
-  </footer>
-
-  <script>
-    (function() {
-      const TMDB_API_KEY = '5bf61a62fd4647aa7debed7d6f2db079';
-      const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
-
-      const sections = [
-        { id: 'top250', title: '🏆 Top 250 Movies', endpoint: '/movie/top_rated', type: 'movie', page: 1 },
-        { id: 'trending', title: '🔥 Today Trending (Now Playing)', endpoint: '/movie/now_playing', type: 'movie', page: 1 },
-        { id: 'blockbuster', title: '💥 Blockbuster (Popular)', endpoint: '/movie/popular', type: 'movie', page: 1 },
-        { id: 'webseries', title: '📺 Trending Web Series', endpoint: '/tv/popular', type: 'tv', page: 1 },
-        { id: 'bollywood', title: '🇮🇳 Bollywood (Hindi)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'hi' } },
-        { id: 'hollywood', title: '🇺🇸 Hollywood (English)', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'en' } },
-        { id: 'south', title: '🎭 South Indian Cinema', endpoint: '/discover/movie', type: 'movie', page: 1, params: { with_original_language: 'ta,te,ml,kn' } }
-      ];
-
-      let isLoading = false;
-
-      function buildUrl(section) {
-        let url = `https://api.themoviedb.org/3${section.endpoint}?api_key=${TMDB_API_KEY}&language=en-US&page=${section.page}`;
-        if (section.params) {
-          for (let [k, v] of Object.entries(section.params)) url += `&${k}=${v}`;
-        }
-        return url;
-      }
-
-      function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-      }
-
-      function renderCard(item, type) {
-        const title = item.title || item.name;
-        const poster = item.poster_path ? IMG_BASE + item.poster_path : 'https://placehold.co/342x513?text=No+Poster';
-        const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-        const id = item.id;
-        const safeTitle = escapeHtml(title).replace(/'/g, "\\'");
-        return `
-          <div class="movie-card-premium rounded-2xl p-3 cursor-pointer transition-all" onclick="location.href='/movie/${id}/'">
-            <img src="${poster}" class="w-full aspect-[2/3] object-cover rounded-xl mb-3" loading="lazy">
-            <h3 class="font-bold text-sm mb-1 truncate">${escapeHtml(title)}</h3>
-            <div class="text-[var(--utv-red)] font-black text-xs">⭐ ${rating}</div>
-            <div class="mt-2 flex gap-2">
-              <button onclick="shareMovie(${id}, '${safeTitle}', 'whatsapp'); event.stopPropagation();" class="flex-1 py-1 bg-green-600 rounded text-[10px] font-bold"><i class="fab fa-whatsapp"></i> Share</button>
-              <button onclick="shareMovie(${id}, '${safeTitle}', 'telegram'); event.stopPropagation();" class="flex-1 py-1 bg-blue-600 rounded text-[10px] font-bold"><i class="fab fa-telegram"></i> Share</button>
-            </div>
-          </div>
-        `;
-      }
-
-      async function loadSection(section, append = false) {
-        if (isLoading) return;
-        isLoading = true;
-        const container = document.getElementById(`section-${section.id}`);
-        const loadBtn = document.getElementById(`loadmore-${section.id}`);
-        if (!append) container.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
-        try {
-          const url = buildUrl(section);
-          const res = await fetch(url);
-          const data = await res.json();
-          let results = data.results || [];
-          if (section.type === 'tv') results = results.filter(r => r.poster_path);
-          const html = results.map(item => renderCard(item, section.type)).join('');
-          if (append) container.insertAdjacentHTML('beforeend', html);
-          else container.innerHTML = html;
-          section.page++;
-          if (section.page > data.total_pages) {
-            if (loadBtn) loadBtn.style.display = 'none';
-          } else {
-            if (loadBtn) loadBtn.style.display = 'inline-block';
-          }
-        } catch (err) {
-          console.error(err);
-          if (!append) container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load. Tap to retry.</div>';
-        }
-        isLoading = false;
-      }
-
-      function buildSectionsUI() {
-        const container = document.getElementById('sectionsContainer');
-        container.innerHTML = '';
-        sections.forEach(sec => {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'mb-10';
-          wrapper.id = `section-wrapper-${sec.id}`;
-          wrapper.innerHTML = `
-            <div class="flex justify-between items-center flex-wrap gap-2">
-              <h2 class="section-title text-xl md:text-2xl">${sec.title}</h2>
-              <button id="loadmore-${sec.id}" class="load-more-btn text-xs md:text-sm">Load More</button>
-            </div>
-            <div id="section-${sec.id}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 mt-4"></div>
-          `;
-          container.appendChild(wrapper);
-          document.getElementById(`loadmore-${sec.id}`).addEventListener('click', () => loadSection(sec, true));
-          loadSection(sec, false);
-        });
-      }
-
-      function scrollToSection(sectionId) {
-        const el = document.getElementById(`section-wrapper-${sectionId}`);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      // Attach button events
-      document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const section = btn.dataset.section;
-          scrollToSection(section);
-        });
-      });
-
-      // Share function (global)
-      window.shareMovie = function(id, title, platform) {
-        const url = `https://u-tv-review.pages.dev/movie/${id}/`;
-        const text = `Check out the review of "${title}" on U-TV REVIEW: `;
-        if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-        else if (platform === 'telegram') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-      };
-
-      // Search
-      async function performSearch(query) {
-        if (!query.trim()) { document.getElementById('searchResultsSection').classList.add('hidden'); return; }
-        const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const results = data.results.filter(r => r.media_type === 'movie' || r.media_type === 'tv');
-        const grid = document.getElementById('searchResultsGrid');
-        if (results.length === 0) grid.innerHTML = '<div class="col-span-full text-center py-4">No results found.</div>';
-        else grid.innerHTML = results.map(item => renderCard(item, item.media_type)).join('');
-        document.getElementById('searchResultsSection').classList.remove('hidden');
-        document.getElementById('searchResultsSection').scrollIntoView({ behavior: 'smooth' });
-      }
-
-      function showLegalModal(title, content) {
-        const modalDiv = document.createElement('div');
-        modalDiv.className = 'fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm';
-        modalDiv.innerHTML = `<div class="bg-zinc-900 max-w-md w-full mx-4 rounded-2xl border border-zinc-800 p-6 shadow-2xl"><h2 class="text-2xl font-black text-[var(--utv-red)] mb-4">${title}</h2><p class="text-zinc-300 text-sm mb-6">${content}</p><button class="close-modal bg-[var(--utv-red)] px-6 py-2 rounded-full font-bold">Close</button></div>`;
-        document.body.appendChild(modalDiv);
-        modalDiv.querySelector('.close-modal').addEventListener('click', () => modalDiv.remove());
-      }
-
-      document.getElementById('dmcaLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('DMCA Notice', 'U-TV REVIEW respects intellectual property. Data from TMDB & OMDb. Contact HELP.WOWMOVIES@GMAIL.COM for takedown.'); });
-      document.getElementById('aboutLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('About Us', 'U-TV REVIEW provides in‑depth critical analysis, ratings, and box office insights.'); });
-      document.getElementById('disclaimerLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('Disclaimer', 'No video files hosted. For educational/review purposes only.'); });
-      document.getElementById('securityLink').addEventListener('click', e => { e.preventDefault(); showLegalModal('Security', 'HTTPS only. No personal data collected.'); });
-
-      document.getElementById('globalSearchBtn').addEventListener('click', () => performSearch(document.getElementById('globalSearchInput').value));
-      document.getElementById('globalSearchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(e.target.value); });
-
-      buildSectionsUI();
-    })();
+  }
   </script>
-  <script async data-cfasync="false" src="https://pl28831952.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "U-TV REVIEW",
+    "url": "https://u-tv-review.pages.dev/",
+    "email": "help.wowmovies@gmail.com"
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{background:#0b0c10;color:#e2e8f0;font-family:system-ui,-apple-system,'Inter',sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    a:focus, button:focus, input:focus{outline:2px solid #ff9500;outline-offset:2px}
+    .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{left:16px;top:16px;width:auto;height:auto;z-index:9999;background:#ff9500;color:#0b0c10;padding:10px 14px;border-radius:12px}
+    .header{background:#0b0c10;padding:10px 16px;position:sticky;top:0;z-index:100;border-bottom:1px solid #1e202b}
+    .top-flex{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+    .logo{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#fff,#ea4c23);background-clip:text;-webkit-background-clip:text;color:transparent;cursor:pointer}
+    .live-badge{background:rgba(234,76,35,.15);border-radius:30px;padding:4px 10px;font-size:.65rem;font-weight:700;color:#ea4c23}
+    .search-wrap{display:flex;background:#14151f;border-radius:40px;border:1px solid #262838;overflow:hidden}
+    .search-input{background:transparent;border:none;padding:8px 12px;color:white;font-size:.75rem;outline:none;width:180px}
+    .search-btn{background:#ea4c23;border:none;padding:0 14px;color:white;font-weight:600;cursor:pointer;font-size:.7rem}
+    .category-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding-bottom:6px}
+    .category-row::-webkit-scrollbar{display:none}
+    .cat-chip{background:#14151f;border:1px solid #1f212e;border-radius:30px;padding:5px 14px;font-size:.7rem;font-weight:600;color:#9da0b5;white-space:nowrap;cursor:pointer;transition:all .2s}
+    .cat-chip.active{background:#ff9500;color:#0b0c10;border-color:#ff9500}
+    .hero-mini{margin:12px 16px;border-radius:24px;height:180px;position:relative;overflow:hidden;background:#101117}
+    .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center 20%;opacity:0;transition:opacity 1s}
+    .hero-slide.active{opacity:1}
+    .hero-mini::after{content:'';position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,#0b0c10,transparent)}
+    .section-head{padding:0 16px;margin:20px 0 12px;display:flex;justify-content:space-between;align-items:baseline}
+    .section-title{font-weight:800;font-size:1rem;border-left:3px solid #ea4c23;padding-left:10px}
+    .movie-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 16px}
+    .movie-card{background:#14151f;border-radius:16px;overflow:hidden;border:1px solid #20212c;cursor:pointer;transition:.1s}
+    .movie-card:active{transform:scale(.97)}
+    .poster-area{position:relative;aspect-ratio:2/3}
+    .movie-card img{width:100%;height:100%;object-fit:cover}
+    .rating-badge{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.6);color:#ffb347;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:20px}
+    .movie-title{font-size:.7rem;font-weight:600;padding:8px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .load-more-btn{background:#1f212e;border:none;color:white;padding:10px 20px;border-radius:40px;font-weight:600;display:block;margin:28px auto;cursor:pointer}
+    .site-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;padding:0 16px;margin-top:12px}
+    .page-card{background:#14151f;border:1px solid #20212c;border-radius:16px;padding:14px;text-decoration:none;display:block}
+    .page-card strong{display:block;margin-bottom:6px;color:#fff}
+    .page-card span{font-size:.8rem;color:#9da0b5;line-height:1.5}
+    .contact-box{margin:24px 16px;padding:16px;border:1px solid #20212c;border-radius:18px;background:#0f1017}
+    .contact-box h2,.info-box h2{font-size:1rem;margin-bottom:10px}
+    .contact-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .contact-btn{display:inline-flex;align-items:center;gap:8px;background:#ea4c23;color:#fff;text-decoration:none;padding:10px 14px;border-radius:999px;font-size:.85rem;font-weight:700}
+    .ad-slot{margin:18px 16px;padding:12px;border:1px dashed #2b2f40;border-radius:16px;background:#0f1017}
+    .ad-fallback{font-size:.8rem;color:#9da0b5;text-align:center;margin-bottom:8px}
+    .info-box{margin:24px 16px;padding:16px;border:1px solid #20212c;border-radius:18px;background:#0f1017;line-height:1.65;color:#cbd5e1}
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+    .info-item{background:#14151f;border:1px solid #20212c;border-radius:14px;padding:12px}
+    .info-item strong{display:block;color:#fff;margin-bottom:6px}
+    footer{background:#06070a;padding:20px 16px;text-align:center;font-size:.75rem;border-top:1px solid #14151f;margin-top:30px}
+    .footer-links a{color:#7e8299;text-decoration:none;margin:0 6px;cursor:pointer}
+    .footer-note{color:#9da0b5;max-width:880px;margin:10px auto 0;line-height:1.6}
+    .section-link{color:#ffb347;text-decoration:none;font-size:.8rem}
+    @media(min-width:480px){.movie-grid{grid-template-columns:repeat(4,1fr)}.hero-mini{height:230px}}
+    @media(min-width:768px){.movie-grid{grid-template-columns:repeat(5,1fr);gap:16px}.hero-mini{height:280px}}
+    @media(min-width:1024px){.movie-grid{grid-template-columns:repeat(6,1fr)}}
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#mainContent">Skip to main content</a>
+
+<header class="header">
+  <div class="top-flex">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="logo" onclick="changeCategory('hindi')">U‑TV REVIEW</span>
+      <div class="live-badge">🔴 LIVE <span id="liveCount">46,732</span></div>
+    </div>
+    <div class="search-wrap" role="search" aria-label="Search movies">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search movies..." aria-label="Search movies">
+      <button class="search-btn" onclick="triggerSearch()" aria-label="Search">GO</button>
+    </div>
+  </div>
+
+  <nav class="category-row" aria-label="Content categories">
+    <button class="cat-chip active" data-cat="hindi" type="button">🇮🇳 HINDI</button>
+    <button class="cat-chip" data-cat="english" type="button">🌍 ENGLISH</button>
+    <button class="cat-chip" data-cat="punjabi" type="button">🟧 PUNJABI</button>
+    <button class="cat-chip" data-cat="south" type="button">🎭 SOUTH</button>
+    <button class="cat-chip" data-cat="movie" type="button">🎬 MOVIES</button>
+    <button class="cat-chip" data-cat="tv" type="button">📺 WEBSERIES</button>
+  </nav>
+</header>
+
+<main id="mainContent">
+  <section class="hero-mini" id="heroContainer" aria-label="Featured content"></section>
+
+  <section class="section-head">
+    <div class="section-title">🔥 TRENDING NOW</div>
+    <a href="#contentGrid" class="section-link">View more</a>
+  </section>
+  <section id="trendingGrid" class="movie-grid" aria-label="Trending content"></section>
+
+  <section class="section-head" id="contentGrid">
+    <div class="section-title" id="dynamicTitle">⭐ POPULAR MOVIES</div>
+  </section>
+  <section id="moviesGrid" class="movie-grid" aria-label="Content grid"></section>
+  <button id="loadMoreButton" class="load-more-btn" type="button">LOAD MORE</button>
+
+  <section class="site-pages" aria-label="Important pages">
+    <a class="page-card" href="/about/"><strong>About Us</strong><span>Learn more about U-TV REVIEW and our platform.</span></a>
+    <a class="page-card" href="/dmca/"><strong>DMCA Policy</strong><span>Read our content removal and copyright policy.</span></a>
+    <a class="page-card" href="/disclaimer/"><strong>Disclaimer</strong><span>Important legal notices regarding third-party content.</span></a>
+    <a class="page-card" href="/contact/"><strong>Contact</strong><span>Get in touch with our team for help and requests.</span></a>
+    <a class="page-card" href="/privacy/"><strong>Privacy Policy</strong><span>How we handle data and cookies.</span></a>
+    <a class="page-card" href="/terms/"><strong>Terms of Use</strong><span>Rules for using this website.</span></a>
+  </section>
+
+  <section class="contact-box" id="contactSection">
+    <h2>📬 Contact Support</h2>
+    <p>Have issues or queries? Reach out to us via our official support channel.</p>
+    <div class="contact-list">
+      <a href="mailto:help.wowmovies@gmail.com" class="contact-btn">Email: help.wowmovies@gmail.com</a>
+      <a href="tel:+910000000000" class="contact-btn">Phone: +91 00000 00000</a>
+    </div>
+  </section>
+
+  <div class="ad-slot">
+    <div class="ad-fallback">Advertisement loading...</div>
+    <script src="https://pl28831952.effectivegatecpm.com/08/eb/75/08eb7538aa9646008f732c0721d2a5cc.js" async defer></script>
+  </div>
+
+  <div class="ad-slot">
+    <div class="ad-fallback">Sponsored content loading...</div>
+    <script async data-cfasync="false" src="https://pl28831972.effectivegatecpm.com/e1fcb13904d27c4fe4e794fb5b4db78d/invoke.js"></script>
+    <div id="container-e1fcb13904d27c4fe4e794fb5b4db78d"></div>
+  </div>
+
+  <div class="ad-slot">
+    <div class="ad-fallback">External sponsor link</div>
+    <a class="contact-btn" href="https://www.effectivegatecpm.com/sa8mca36sv?key=3711015d24018cf89ccb362976c4a2e0" target="_blank" rel="noopener noreferrer">Open Smart Link</a>
+  </div>
+
+  <section class="info-box" id="businessInfo">
+    <h2>Business Details</h2>
+    <div class="info-grid">
+      <div class="info-item"><strong>Business Name</strong>U-TV REVIEW</div>
+      <div class="info-item"><strong>Logo</strong><img src="/logo.png" alt="U-TV REVIEW logo" style="max-width:120px;height:auto;"></div>
+      <div class="info-item"><strong>Email</strong><a href="mailto:help.wowmovies@gmail.com">help.wowmovies@gmail.com</a></div>
+      <div class="info-item"><strong>Website</strong><a href="https://u-tv-review.pages.dev/">u-tv-review.pages.dev</a></div>
+      <div class="info-item"><strong>Support</strong>Fast reply by email for support and site requests.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a> |
+    <a href="/about/">About Us</a> |
+    <a href="/dmca/">DMCA</a> |
+    <a href="/disclaimer/">Disclaimer</a> |
+    <a href="/contact/">Contact</a> |
+    <a href="/privacy/">Privacy</a> |
+    <a href="/terms/">Terms</a>
+  </div>
+  <p class="footer-note">© 2026 U-TV REVIEW | Embedded third-party streams. All rights reserved.</p>
+</footer>
+
+<script>
+const TMDB_KEYS=['174d0214bf933dd59b3d5ec68a0c967f','5bf61a62fd4647aa7debed7d6f2db079'];
+let keyIndex=0, activeCategory='hindi', pageNumber=1, isLoading=false, endOfList=false, searchKeyword=null;
+const BASE='https://api.themoviedb.org/3', IMG_URL='https://image.tmdb.org/t/p/w342', BACKDROP='https://image.tmdb.org/t/p/w780';
+const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+async function tmdbRequest(endpoint, params={}){
+  for(let i=0;i<TMDB_KEYS.length;i++){
+    try{
+      const url=new URL(BASE+endpoint);
+      url.searchParams.set('api_key',TMDB_KEYS[keyIndex]);
+      if(!('language' in params)) url.searchParams.set('language','en-US');
+      for(const [k,v] of Object.entries(params)) if(v!==undefined&&v!==null&&v!=='') url.searchParams.set(k,v);
+      const r=await fetch(url);
+      if(!r.ok) throw new Error('bad');
+      return await r.json();
+    }catch(e){
+      keyIndex=(keyIndex+1)%TMDB_KEYS.length;
+    }
+  }
+  throw new Error('TMDB failed');
+}
+
+function getEndpoint(cat,page){
+  if(searchKeyword) return `/search/multi?query=${encodeURIComponent(searchKeyword)}&page=${page}&include_adult=false`;
+  const r={
+    hindi:`/discover/movie?with_original_language=hi&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    english:`/discover/movie?with_original_language=en&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    punjabi:`/discover/movie?with_original_language=pa&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    south:`/discover/movie?with_original_language=ta|te|ml|kn&sort_by=popularity.desc&include_adult=false&page=${page}`,
+    movie:`/movie/popular?page=${page}`,
+    tv:`/tv/popular?page=${page}`
+  };
+  return r[cat]||r.movie;
+}
+
+function sectionTitle(cat){
+  if(searchKeyword) return `🔍 SEARCH: ${searchKeyword}`;
+  return {hindi:'🇮🇳 HINDI CINEMA',english:'🌍 ENGLISH TOP PICKS',punjabi:'PUNJABI HITS',south:'SOUTH SUPERSTARS',movie:'🎬 POPULAR MOVIES',tv:'📺 TRENDING WEBSERIES'}[cat]||'POPULAR NOW';
+}
+
+function buildCard(m){
+  const title=m.title||m.name||'Untitled';
+  const poster=m.poster_path?IMG_URL+m.poster_path:'https://placehold.co/342x513?text=No+Poster';
+  const rating=m.vote_average?m.vote_average.toFixed(1):'0.0';
+  let type=m.media_type||(activeCategory==='tv'?'tv':'movie');
+  if(type!=='movie'&&type!=='tv') type='movie';
+  return `<div class="movie-card" data-id="${m.id}" data-type="${type}" tabindex="0" role="link" aria-label="${esc(title)}"><div class="poster-area"><img src="${poster}" alt="${esc(title)}" loading="lazy"><div class="rating-badge">⭐ ${rating}</div></div><div class="movie-title">${esc(title)}</div></div>`;
+}
+
+function attachListeners(){
+  document.querySelectorAll('.movie-card').forEach(card=>{
+    if(card.dataset.listener) return;
+    card.dataset.listener='1';
+    const go=()=>{ const id=card.dataset.id, type=card.dataset.type||'movie'; if(id) location.href=`https://u-tv-review.pages.dev/${type}/${id}/`; };
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') go(); });
+  });
+}
+
+async function loadTrending(){
+  try{
+    const data=await tmdbRequest('/trending/all/week',{page:1});
+    const items=(data.results||[]).filter(i=>i.poster_path).slice(0,12);
+    document.getElementById('trendingGrid').innerHTML=items.map(buildCard).join('');
+    attachListeners();
+  }catch(e){
+    document.getElementById('trendingGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;">Trending load failed</div>';
+  }
+}
+
+async function loadMain(reset=true){
+  if(isLoading) return;
+  isLoading=true;
+  if(reset){
+    pageNumber=1;
+    endOfList=false;
+    document.getElementById('moviesGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;">⏳ loading...</div>';
+  }
+  try{
+    const res=await tmdbRequest(getEndpoint(activeCategory,pageNumber));
+    let items=res.results||[];
+    if(activeCategory==='south'&&!searchKeyword) items=items.filter(i=>i.poster_path);
+    const html=items.map(buildCard).join('');
+    if(reset) document.getElementById('moviesGrid').innerHTML=html;
+    else document.getElementById('moviesGrid').insertAdjacentHTML('beforeend',html);
+    pageNumber++;
+    endOfList=items.length<18;
+    document.getElementById('loadMoreButton').style.display=endOfList?'none':'block';
+    attachListeners();
+  }catch(e){
+    document.getElementById('moviesGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;">Failed to load content</div>';
+  }
+  isLoading=false;
+}
+
+async function changeCategory(cat){
+  activeCategory=cat;
+  searchKeyword=null;
+  document.getElementById('searchInput').value='';
+  document.getElementById('dynamicTitle').innerText=sectionTitle(cat);
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.cat===cat));
+  await loadMain(true);
+}
+
+async function triggerSearch(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q) return;
+  searchKeyword=q;
+  activeCategory='movie';
+  document.querySelectorAll('.cat-chip').forEach(ch=>ch.classList.remove('active'));
+  document.getElementById('dynamicTitle').innerText=sectionTitle('movie');
+  await loadMain(true);
+}
+
+async function initHero(){
+  try{
+    const data=await tmdbRequest('/trending/movie/day',{page:1});
+    const slides=(data.results||[]).filter(s=>s.backdrop_path).slice(0,5);
+    const container=document.getElementById('heroContainer');
+    container.innerHTML=slides.map((s,i)=>`<div class="hero-slide ${i===0?'active':''}" style="background-image:url('${BACKDROP+s.backdrop_path}')"></div>`).join('');
+    setInterval(()=>{
+      const all=document.querySelectorAll('.hero-slide');
+      if(!all.length) return;
+      let current=[...all].findIndex(x=>x.classList.contains('active'));
+      all[current].classList.remove('active');
+      current=(current+1)%all.length;
+      all[current].classList.add('active');
+    },4800);
+  }catch(e){}
+}
+
+document.querySelectorAll('.cat-chip').forEach(btn=>btn.addEventListener('click',()=>changeCategory(btn.dataset.cat)));
+document.getElementById('loadMoreButton').onclick=()=>{ if(!isLoading&&!endOfList) loadMain(false); };
+document.getElementById('searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') triggerSearch(); });
+
+setInterval(()=>{
+  const el=document.getElementById('liveCount');
+  if(el) el.innerText=(43000+Math.floor(Math.random()*15000)).toLocaleString();
+},7000);
+
+initHero();
+loadTrending();
+changeCategory('hindi');
+</script>
 </body>
 </html>
