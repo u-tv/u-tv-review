@@ -1,10 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>https://u-tv-review.pages.dev/index.html</loc>
-  </sitemap>
-  
-  <sitemap>
-    <loc>https://shy-queen-5392.vikkythakur1995.workers.dev/</loc>
-  </sitemap>
-</sitemapindex>
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Sitemap: https://u-tv-review.pages.dev/sitemap.xml
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 5
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 5
